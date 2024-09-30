@@ -9,7 +9,7 @@ public class GenericServiceImpl<T> implements GenericService<T> {
 
     private StudentRepository studentRepository;
 
-    private final JpaRepository<T, Long> repository; // Используйте Long
+    private final JpaRepository<T, Long> repository;
 
     public GenericServiceImpl(JpaRepository<T, Long> repository) {
         this.repository = repository;
@@ -22,7 +22,7 @@ public class GenericServiceImpl<T> implements GenericService<T> {
 
 
     @Override
-    public T findById(Long id) { // Используйте Long
+    public T findById(Long id) {
         return repository.findById(id).orElse(null);
     }
 
@@ -37,7 +37,7 @@ public class GenericServiceImpl<T> implements GenericService<T> {
     }
 
     @Override
-    public void delete(Long id) { // Используйте Long
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 }

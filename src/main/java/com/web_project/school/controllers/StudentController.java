@@ -58,7 +58,7 @@ public class StudentController {
         List<StudentModel> students = studentService.findByName(firstName);
         model.addAttribute("students", students);
         model.addAttribute("student", new StudentModel());
-        return "studentList"; // Возвращаем тот же шаблон с результатами поиска
+        return "studentList";
     }
 }
 

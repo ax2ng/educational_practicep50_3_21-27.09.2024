@@ -36,7 +36,6 @@ public class ProductModel {
     @Future(message = "Дата окончания акции должна быть в будущем")
     private LocalDate promotionEndDate;
 
-    // Конструкторы, геттеры и сеттеры
 
     public ProductModel() {}
 

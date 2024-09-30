@@ -13,6 +13,7 @@ import java.time.LocalDate;
 public class StudentModel {
 
     @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -36,7 +37,6 @@ public class StudentModel {
     @Past(message = "Дата рождения должна быть в прошлом")
     private LocalDate birthDate;
 
-    // Конструкторы, геттеры и сеттеры
 
     public StudentModel() {}
 

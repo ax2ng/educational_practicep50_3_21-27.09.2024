@@ -20,7 +20,7 @@ public class StudentServiceImpl extends GenericServiceImpl<StudentModel> impleme
     }
 
     @Override
-    public List<StudentModel> findByName(String firstName) { // Реализация метода поиска
-        return studentRepository.findByFirstNameContainingIgnoreCase(firstName); // Измените на firstName
+    public List<StudentModel> findByName(String firstName) {
+        return studentRepository.findByFirstNameContainingIgnoreCase(firstName);
     }
 }

@@ -35,7 +35,6 @@ public class OrderModel {
     @Size(max = 200, message = "Комментарий не должен превышать 200 символов")
     private String comment;
 
-    // Конструкторы, геттеры и сеттеры
 
     public OrderModel() {}
 
