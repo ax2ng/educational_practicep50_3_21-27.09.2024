@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список студентов</title>
+</head>
+<body>
+<h1>Список студентов</h1>
+<form action="/students/add" method="post" th:object="${student}">
+    <input type="text" name="firstName" placeholder="Имя" th:field="*{firstName}" required>
+    <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Имя не должно быть пустым</div>
+
+    <input type="text" name="lastName" placeholder="Фамилия" th:field="*{lastName}" required>
+    <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Фамилия не должна быть пустой</div>
+
+    <input type="email" name="email" placeholder="Почта" th:field="*{email}" required>
+    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Введите корректный адрес электронной почты</div>
+
+    <input type="number" name="age" placeholder="Возраст" th:field="*{age}" required min="18" max="100">
+    <div th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Возраст должен быть от 18 до 100 лет</div>
+
+    <select name="gender" th:field="*{gender}" required>
+        <option value="" disabled selected>Выберите пол</option>
+        <option value="Мужской">Мужской</option>
+        <option value="Женский">Женский</option>
+    </select>
+    <div th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}">Пол не должен быть пустым</div>
+
+    <input type="date" name="birthDate" placeholder="Дата рождения" th:field="*{birthDate}" required>
+    <div th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}">Дата рождения должна быть в прошлом</div>
+
+    <button type="submit">Добавить студента</button>
+</form>
+
+<h2>Все студенты:</h2>
+<ul>
+    <th:block th:each="student : ${students}">
+        <li>
+            <span th:text="${student.firstName} + ' ' + ${student.lastName} + ' ' + ${student.email} + ' ' + ${student.age} + ' ' + ${student.gender} + ' ' + ${student.birthDate}"></span>
+            <form action="/students/update" method="post" style="display:inline;">
+                <input type="hidden" name="id" th:value="${student.id}">
+                <input type="text" name="firstName" th:value="${student.firstName}" placeholder="Имя" required>
+                <input type="text" name="lastName" th:value="${student.lastName}" placeholder="Фамилия" required>
+                <input type="email" name="email" th:value="${student.email}" placeholder="Почта">
+                <input type="number" name="age" th:value="${student.age}" placeholder="Возраст" required min="18" max="100">
+                <select name="gender">
+                    <option value="" disabled>Выберите пол</option>
+                    <option value="Мужской" th:selected="${student.gender == 'Мужской'}">Мужской</option>
+                    <option value="Женский" th:selected="${student.gender == 'Женский'}">Женский</option>
+                </select>
+                <input type="date" name="birthDate" th:value="${student.birthDate}" placeholder="Дата рождения">
+                <button type="submit">Обновить</button>
+            </form>
+            <form action="/students/delete" method="post" style="display:inline;">
+                <input type="hidden" name="id" th:value="${student.id}">
+                <button type="submit">Удалить</button>
+            </form>
+        </li>
+    </th:block>
+</ul>
+
+<form action="/students/search" method="get">
+    <input type="text" name="firstName" placeholder="Введите имя студента" required>
+    <button type="submit">Поиск</button>
+</form>
+</body>
+</html>

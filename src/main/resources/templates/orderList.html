@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Список заказов</title>
+</head>
+<body>
+<h1>Список заказов</h1>
+
+<!-- Форма для добавления нового заказа -->
+<form action="/orders/add" method="post" th:object="${order}">
+    <input type="text" name="orderNumber" placeholder="Номер заказа" th:field="*{orderNumber}" required>
+    <div th:if="${#fields.hasErrors('orderNumber')}" th:errors="*{orderNumber}">Номер заказа не должен быть пустым</div>
+
+    <input type="date" name="orderDate" placeholder="Дата рождения" th:field="*{orderDate}" required>
+    <div th:if="${#fields.hasErrors('orderDate')}" th:errors="*{orderDate}">Дата заказа должна быть в прошлом</div>
+
+    <input type="text" name="customerName" placeholder="Имя клиента" th:field="*{customerName}" required>
+    <div th:if="${#fields.hasErrors('customerName')}" th:errors="*{customerName}">Имя клиента не должно быть пустым</div>
+
+    <input type="email" name="customerEmail" placeholder="Email клиента" th:field="*{customerEmail}" required>
+    <div th:if="${#fields.hasErrors('customerEmail')}" th:errors="*{customerEmail}">Введите корректный адрес электронной почты</div>
+
+    <input type="number" name="totalAmount" placeholder="Сумма заказа" th:field="*{totalAmount}" required min="0">
+    <div th:if="${#fields.hasErrors('totalAmount')}" th:errors="*{totalAmount}">Сумма заказа должна быть положительной</div>
+
+    <textarea name="comment" placeholder="Комментарий" th:field="*{comment}"></textarea>
+
+    <button type="submit">Добавить заказ</button>
+</form>
+
+<h2>Все заказы:</h2>
+<ul>
+    <th:block th:each="order : ${orders}">
+        <li>
+            <span th:text="'Заказ № ' + ${order.orderNumber} + 'Дата: '  +  ${order.orderDate} + ', Клиент: ' + ${order.customerName} + ', Email: ' + ${order.customerEmail} + ', Сумма: ' + ${order.totalAmount}"></span>
+            <form action="/orders/update" method="post" style="display:inline;">
+                <input type="hidden" name="id" th:value="${order.id}">
+                <input type="text" name="orderNumber" th:value="${order.orderNumber}" placeholder="Номер заказа" required>
+                <input type="date" name="orderDate" th:value="${order.orderDate}" placeholder="Дата заказа">
+                <input type="text" name="customerName" th:value="${order.customerName}" placeholder="Имя клиента" required>
+                <input type="email" name="customerEmail" th:value="${order.customerEmail}" placeholder="Email клиента">
+                <input type="number" name="totalAmount" th:value="${order.totalAmount}" placeholder="Сумма заказа" required min="0">
+                <textarea name="comment" placeholder="Комментарий" th:text="${order.comment}"></textarea>
+
+                <button type="submit">Обновить</button>
+            </form>
+            <form action="/orders/delete" method="post" style="display:inline;">
+                <input type="hidden" name="id" th:value="${order.id}">
+                <button type="submit">Удалить</button>
+            </form>
+        </li>
+    </th:block>
+</ul>
+</body>
+</html>

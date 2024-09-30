@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Список продуктов</title>
+</head>
+<body>
+<h1>Список продуктов</h1>
+
+<!-- Форма для добавления нового продукта -->
+<form action="/products/add" method="post" th:object="${product}">
+  <input type="text" name="name" placeholder="Название продукта" th:field="*{name}" required>
+  <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Название продукта не должно быть пустым</div>
+
+  <input type="number" name="price" placeholder="Цена" th:field="*{price}" required min="0.01" step="0.01">
+  <div th:if="${#fields.hasErrors('price')}" th:errors="*{price}">Цена должна быть положительной</div>
+
+  <input type="number" name="quantity" placeholder="Количество" th:field="*{quantity}" required min="0">
+  <div th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}">Количество не может быть отрицательным</div>
+
+  <textarea name="description" placeholder="Описание" th:field="*{description}"></textarea>
+
+  <select name="status" th:field="*{status}" required>
+    <option value="" disabled selected>Выберите статус</option>
+    <option value="Доступен">Доступен</option>
+    <option value="Недоступен">Недоступен</option>
+  </select>
+  <div th:if="${#fields.hasErrors('status')}" th:errors="*{status}">Статус не должен быть пустым</div>
+
+  <input type="date" name="promotionEndDate" placeholder="Дата окончания акции" th:field="*{promotionEndDate}">
+  <div th:if="${#fields.hasErrors('promotionEndDate')}" th:errors="*{promotionEndDate}">Дата окончания акции должна быть в будущем</div>
+
+  <button type="submit">Добавить продукт</button>
+</form>
+
+<h2>Все продукты:</h2>
+<ul>
+  <th:block th:each="product : ${products}">
+    <li>
+      <span th:text="'Название: ' + ${product.name} + ', Цена: ' + ${product.price} + ', Количество: ' + ${product.quantity} + ', Статус: ' + ${product.status}"></span>
+      <form action="/products/update" method="post" style="display:inline;">
+        <input type="hidden" name="id" th:value="${product.id}">
+        <input type="text" name="name" th:value="${product.name}" placeholder="Название продукта" required>
+        <input type="number" name="price" th:value="${product.price}" placeholder="Цена" required min="0.01" step="0.01">
+        <input type="number" name="quantity" th:value="${product.quantity}" placeholder="Количество" required min="0">
+        <textarea name="description" placeholder="Описание" th:text="${product.description}"></textarea>
+
+        <select name="status">
+          <option value="" disabled>Выберите статус</option>
+          <option value="Доступен" th:selected="${product.status == 'Доступен'}">Доступен</option>
+          <option value="Недоступен" th:selected="${product.status == 'Недоступен'}">Недоступен</option>
+        </select>
+
+        <input type="date" name="promotionEndDate" th:value="${product.promotionEndDate}" placeholder="Дата заказа">
+
+        <button type="submit">Обновить</button>
+      </form>
+      <form action="/products/delete" method="post" style="display:inline;">
+        <input type="hidden" name="id" th:value="${product.id}">
+        <button type="submit">Удалить</button>
+      </form>
+    </li>
+  </th:block>
+</ul>
+</body>
+</html>
