@@ -4,14 +4,15 @@ import com.web_project.school.repository.StudentRepository;
 import com.web_project.school.service.GenericService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
+import java.util.UUID;
 
 public class GenericServiceImpl<T> implements GenericService<T> {
 
     private StudentRepository studentRepository;
 
-    private final JpaRepository<T, Long> repository;
+    private final JpaRepository<T, UUID> repository;
 
-    public GenericServiceImpl(JpaRepository<T, Long> repository) {
+    public GenericServiceImpl(JpaRepository<T, UUID> repository) {
         this.repository = repository;
     }
 
@@ -22,7 +23,7 @@ public class GenericServiceImpl<T> implements GenericService<T> {
 
 
     @Override
-    public T findById(Long id) {
+    public T findById(UUID id) {
         return repository.findById(id).orElse(null);
     }
 
@@ -37,7 +38,7 @@ public class GenericServiceImpl<T> implements GenericService<T> {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(UUID id) {
         repository.deleteById(id);
     }
 }

@@ -11,16 +11,8 @@ import java.util.List;
 @Service
 public class StudentServiceImpl extends GenericServiceImpl<StudentModel> implements StudentService {
 
-    private final StudentRepository studentRepository;
-
     @Autowired
     public StudentServiceImpl(StudentRepository studentRepository) {
         super(studentRepository);
-        this.studentRepository = studentRepository;
-    }
-
-    @Override
-    public List<StudentModel> findByName(String firstName) {
-        return studentRepository.findByFirstNameContainingIgnoreCase(firstName);
     }
 }

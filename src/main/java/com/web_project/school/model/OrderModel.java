@@ -1,105 +1,61 @@
 package com.web_project.school.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.*;
-
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
+import java.util.UUID;
 
 @Entity
+@Table(name = "orders")
 public class OrderModel {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    private UUID id;
 
-    @NotNull(message = "Номер заказа не должен быть пустым")
-    private Long orderNumber;
+    @ManyToOne // Заказ может принадлежать одному студенту
+    @JoinColumn(name = "student_id", nullable = false) // Внешний ключ для связи с StudentModel
+    private StudentModel student;
 
-    @Past(message = "Дата заказа не должна быть в прошлом")
-    private LocalDate orderDate;
-
-    @NotBlank(message = "Имя клиента не должно быть пустым")
-    private String customerName;
-
-    @Email(message = "Введите корректный адрес электронной почты клиента")
-    private String customerEmail;
-
-    @Positive(message = "Сумма заказа должна быть положительной")
-    private Double totalAmount;
-
-    @Size(max = 200, message = "Комментарий не должен превышать 200 символов")
-    private String comment;
-
+    // Другие поля, такие как номер заказа, дата и т.д.
+    private String orderNumber; // Пример поля номера заказа
+    private double totalAmount; // Пример поля для суммы заказа
 
     public OrderModel() {}
 
-    public OrderModel(Long orderNumber, LocalDate orderDate, String customerName, String customerEmail, Double totalAmount, String comment) {
+    public OrderModel(UUID id, StudentModel student, String orderNumber, double totalAmount) {
+        this.id = id;
+        this.student = student;
         this.orderNumber = orderNumber;
-        this.orderDate = orderDate;
-        this.customerName = customerName;
-        this.customerEmail = customerEmail;
         this.totalAmount = totalAmount;
-        this.comment = comment;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public Long getOrderNumber() {
+    public StudentModel getStudent() {
+        return student;
+    }
+
+    public void setStudent(StudentModel student) {
+        this.student = student;
+    }
+
+    public String getOrderNumber() {
         return orderNumber;
     }
 
-    public void setOrderNumber(Long orderNumber) {
+    public void setOrderNumber(String orderNumber) {
         this.orderNumber = orderNumber;
     }
 
-    public LocalDate getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(LocalDate orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public String getCustomerEmail() {
-        return customerEmail;
-    }
-
-    public void setCustomerEmail(String customerEmail) {
-        this.customerEmail = customerEmail;
-    }
-
-    public Double getTotalAmount() {
+    public double getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(Double totalAmount) {
+    public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
     }
 }

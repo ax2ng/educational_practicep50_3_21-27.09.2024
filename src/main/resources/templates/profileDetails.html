@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Детали профиля</title>
+</head>
+<body>
+
+<h1>Детали профиля</h1>
+
+<p><strong>ID:</strong> <span th:text="${profile.id}"></span></p>
+<p><strong>Биография:</strong> <span th:text="${profile.bio}"></span></p>
+
+<a href="/profiles/all">Назад к списку профилей</a>
+
+</body>
+</html>

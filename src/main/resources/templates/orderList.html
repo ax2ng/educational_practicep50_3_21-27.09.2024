@@ -9,22 +9,16 @@
 
 <!-- Форма для добавления нового заказа -->
 <form action="/orders/add" method="post" th:object="${order}">
+    <label for="studentId">Выберите студента:</label>
+    <select id="studentId" name="studentId" required>
+        <option value="" disabled selected>Выберите студента</option>
+        <th:block th:each="student : ${students}">
+            <option th:value="${student.id}" th:text="${student.firstName} + ' ' + ${student.lastName}"></option>
+        </th:block>
+    </select>
+
     <input type="text" name="orderNumber" placeholder="Номер заказа" th:field="*{orderNumber}" required>
-    <div th:if="${#fields.hasErrors('orderNumber')}" th:errors="*{orderNumber}">Номер заказа не должен быть пустым</div>
-
-    <input type="date" name="orderDate" placeholder="Дата рождения" th:field="*{orderDate}" required>
-    <div th:if="${#fields.hasErrors('orderDate')}" th:errors="*{orderDate}">Дата заказа должна быть в прошлом</div>
-
-    <input type="text" name="customerName" placeholder="Имя клиента" th:field="*{customerName}" required>
-    <div th:if="${#fields.hasErrors('customerName')}" th:errors="*{customerName}">Имя клиента не должно быть пустым</div>
-
-    <input type="email" name="customerEmail" placeholder="Email клиента" th:field="*{customerEmail}" required>
-    <div th:if="${#fields.hasErrors('customerEmail')}" th:errors="*{customerEmail}">Введите корректный адрес электронной почты</div>
-
     <input type="number" name="totalAmount" placeholder="Сумма заказа" th:field="*{totalAmount}" required min="0">
-    <div th:if="${#fields.hasErrors('totalAmount')}" th:errors="*{totalAmount}">Сумма заказа должна быть положительной</div>
-
-    <textarea name="comment" placeholder="Комментарий" th:field="*{comment}"></textarea>
 
     <button type="submit">Добавить заказ</button>
 </form>
@@ -33,24 +27,47 @@
 <ul>
     <th:block th:each="order : ${orders}">
         <li>
-            <span th:text="'Заказ № ' + ${order.orderNumber} + 'Дата: '  +  ${order.orderDate} + ', Клиент: ' + ${order.customerName} + ', Email: ' + ${order.customerEmail} + ', Сумма: ' + ${order.totalAmount}"></span>
+            <strong>Заказ №:</strong>
+            <span th:text="${order.orderNumber}"></span>,
+            <strong>Студент:</strong>
+            <span th:text="${order.student.firstName} + ' ' + ${order.student.lastName}"></span>,
+            <strong>Сумма:</strong>
+            <span th:text="${order.totalAmount}"></span>
+
+            <!-- Форма для обновления заказа -->
+            Обновить:
             <form action="/orders/update" method="post" style="display:inline;">
-                <input type="hidden" name="id" th:value="${order.id}">
-                <input type="text" name="orderNumber" th:value="${order.orderNumber}" placeholder="Номер заказа" required>
-                <input type="date" name="orderDate" th:value="${order.orderDate}" placeholder="Дата заказа">
-                <input type="text" name="customerName" th:value="${order.customerName}" placeholder="Имя клиента" required>
-                <input type="email" name="customerEmail" th:value="${order.customerEmail}" placeholder="Email клиента">
-                <input type="number" name="totalAmount" th:value="${order.totalAmount}" placeholder="Сумма заказа" required min="0">
-                <textarea name="comment" placeholder="Комментарий" th:text="${order.comment}"></textarea>
+                <input type="hidden" name="id" th:value="${order.id}"/>
+                <label for="studentUpdate">Выберите студента:</label>
+                <select id="studentUpdate" name="studentId" required>
+                    <option value="" disabled selected>Выберите студента</option>
+                    <th:block th:each="student : ${students}">
+                        <option th:value="${student.id}"
+                                th:text="${student.firstName} + ' ' + ${student.lastName}"
+                                th:selected="${order.student.id == student.id}"></option> <!-- Выбор текущего студента -->
+                    </th:block>
+                </select>
+                Номер заказа:
+                <input type="text" name="orderNumber" th:value="${order.orderNumber}" required />
+                Сумма:
+                <input type="number" name="totalAmount" th:value="${order.totalAmount}" required min="0"/>
 
                 <button type="submit">Обновить</button>
             </form>
+
+            <!-- Форма для удаления заказа -->
+            Удалить:
             <form action="/orders/delete" method="post" style="display:inline;">
-                <input type="hidden" name="id" th:value="${order.id}">
+                <input type="hidden" name="id" th:value="${order.id}"/>
                 <button type="submit">Удалить</button>
             </form>
         </li>
     </th:block>
 </ul>
+
+<a href="/students/all">Студенты</a><br/>
+<a href="/profiles/all">Профили</a><br/>
+<a href="/products/all">Продукты</a><br/>
+
 </body>
 </html>

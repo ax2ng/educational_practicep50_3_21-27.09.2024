@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang='en' xmlns:th='http://www.thymeleaf.org'>
+<head>
+    <meta charset='UTF-8'>
+    <title>Список профилей студентов</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        form {
+            display: inline-block;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Список профилей студентов</h1>
+
+<!-- Форма для добавления нового профиля -->
+<form action='/profiles/add' method='post' th:object='${profile}'>
+    <label for="bio">Биография:</label>
+    <textarea id="bio" name='bio' placeholder='Введите биографию' required></textarea>
+
+    <!-- Кнопка для добавления профиля -->
+    <button type='submit'>Добавить профиль</button>
+</form>
+
+<h2>Все профили:</h2>
+
+<ul>
+    <th:block th:each='profile : ${profiles}'>
+        <li>
+            <strong>Профиль ID:</strong>
+            <span th:text='${profile.id}'></span> -
+            <strong>Студент:</strong>
+            <span th:text='${profile.student != null ? profile.student.firstName + " " + profile.student.lastName : "Нет студента"}'></span> -
+            <strong>Биография:</strong>
+            <span th:text='${profile.bio}'></span>
+
+            <!-- Форма для обновления профиля -->
+            Обновить:
+            <form action='/profiles/update' method='post' style='display:inline;'>
+                <input type='hidden' name='id' th:value='${profile.id}'/>
+                <label for="bioUpdate">Биография:</label>
+                <textarea id="bioUpdate" name='bio' required th:text='${profile.bio}'></textarea>
+
+                <!-- Выпадающий список для выбора студента -->
+                <label for="studentUpdate">Выберите студента:</label>
+                <select id="studentUpdate" name="studentId" required>
+                    <option value="" disabled selected>Выберите студента</option>
+                    <th:block th:each="student : ${students}">
+                        <option th:value="${student.id}"
+                                th:text="${student.firstName} + ' ' + ${student.lastName}"
+                                th:selected="${profile.student != null && profile.student.id == student.id}"></option> <!-- Выбор текущего студента -->
+                    </th:block>
+                </select>
+
+                <!-- Кнопка обновления -->
+                Кнопка обновления:
+                <button type='submit'>Обновить профиль</button>
+            </form>
+
+            <!-- Форма для удаления профиля -->
+            Удалить:
+            <form action='/profiles/delete' method='post' style='display:inline;'>
+                <input type='hidden' name='id' th:value='${profile.id}'/>
+                <button type='submit'>Удалить профиль</button>
+            </form>
+        </li>
+    </th:block>
+</ul>
+
+<!-- Ссылки на другие страницы -->
+<a href='/students/all'>Студенты</a><br/>
+<a href='/products/all'>Продукты</a><br/>
+<a href='/orders/all'>Заказы</a><br/>
+
+</body>
+</html>
