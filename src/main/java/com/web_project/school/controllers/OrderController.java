@@ -5,6 +5,7 @@ import com.web_project.school.service.OrderService;
 import com.web_project.school.service.StudentService; // Импортируем StudentService
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,6 +31,7 @@ public class OrderController {
         return "orderList";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     @PostMapping("/add")
     public String addOrder(@Valid @ModelAttribute("order") OrderModel order, BindingResult result,
                            @RequestParam UUID studentId) { // Получаем ID студента из формы
@@ -43,6 +45,7 @@ public class OrderController {
         return "redirect:/orders/all";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     @PostMapping("/update")
     public String updateOrder(@Valid @ModelAttribute("order") OrderModel order, BindingResult result,
                               @RequestParam UUID studentId) {
@@ -56,6 +59,7 @@ public class OrderController {
         return "redirect:/orders/all";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @PostMapping("/delete")
     public String deleteOrder(@RequestParam UUID id) {
         orderService.delete(id);

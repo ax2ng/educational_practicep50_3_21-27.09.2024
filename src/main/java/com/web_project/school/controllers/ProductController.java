@@ -6,6 +6,7 @@ import com.web_project.school.service.ProductService;
 import com.web_project.school.service.StudentService; // Импортируем StudentService
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,6 +32,7 @@ public class ProductController {
         return "productList"; // Шаблон для отображения списка продуктов
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     @PostMapping("/add")
     public String addProduct(@Valid @ModelAttribute("product") ProductModel product, BindingResult result,
                              @RequestParam(required = false) UUID[] studentIds) { // Получаем ID студентов из формы
@@ -52,6 +54,7 @@ public class ProductController {
         return "redirect:/products/all";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     @PostMapping("/update")
     public String updateProduct(@Valid @ModelAttribute("product") ProductModel product, BindingResult result) {
         if (result.hasErrors()) {
@@ -62,6 +65,7 @@ public class ProductController {
         return "redirect:/products/all";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @PostMapping("/delete")
     public String deleteProduct(@RequestParam UUID id) {
         productService.delete(id);

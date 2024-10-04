@@ -5,6 +5,7 @@ import com.web_project.school.service.ProfileService;
 import com.web_project.school.service.StudentService; // Импортируем StudentService
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,6 +31,7 @@ public class ProfileController {
         return "profileList";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     @PostMapping("/add")
     public String addProfile(@RequestParam String bio) {
         ProfileModel profile = new ProfileModel();
@@ -42,6 +44,7 @@ public class ProfileController {
         return "redirect:/profiles/all";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     @PostMapping("/update")
     public String updateProfile(@Valid @ModelAttribute("profile") ProfileModel profile,
                                 @RequestParam UUID studentId, BindingResult result) {
@@ -60,6 +63,7 @@ public class ProfileController {
         return "redirect:/profiles/all";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @PostMapping("/delete")
     public String deleteProfile(@RequestParam UUID id) {
         profileService.delete(id);

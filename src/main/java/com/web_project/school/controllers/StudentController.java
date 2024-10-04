@@ -6,10 +6,17 @@ import com.web_project.school.service.ProfileService;
 import com.web_project.school.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.GrantedAuthority;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -32,9 +39,25 @@ public class StudentController {
         return "studentList";
     }
 
+
     @PostMapping("/add")
     public String addStudent(@Valid @ModelAttribute("student") StudentModel student, BindingResult result,
                              @RequestParam String bio, Model model) {
+        // Получаем аутентификацию текущего пользователя
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Проверяем, есть ли у пользователя права ADMIN или MANAGER
+        boolean hasAdminOrManagerRole = authentication.getAuthorities().stream()
+                .anyMatch(grantedAuthority ->
+                        grantedAuthority.getAuthority().equals("ADMIN") ||
+                                grantedAuthority.getAuthority().equals("MANAGER"));
+
+        if (!hasAdminOrManagerRole) {
+            // Если прав нет, перенаправляем на страницу ошибки
+            model.addAttribute("message", "НЕЛЬЗЯ");
+            return "error"; // Убедитесь, что у вас есть шаблон error.html
+        }
+
         if (result.hasErrors()) {
             model.addAttribute("students", studentService.findAll());
             model.addAttribute("profiles", profileService.findAll());
@@ -53,11 +76,12 @@ public class StudentController {
         return "redirect:/students/all";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     @PostMapping("/update")
     public String updateStudent(@Valid @ModelAttribute("student") StudentModel student, BindingResult result,
                                 @RequestParam UUID profileId) {
         if (result.hasErrors()) {
-            return "redirect:/students/all"; // Можно добавить обработку ошибок
+            return "redirect:/error"; // Можно добавить обработку ошибок
         }
 
         // Получаем профиль по ID и устанавливаем его в студента
@@ -68,6 +92,7 @@ public class StudentController {
         return "redirect:/students/all";
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @PostMapping("/delete")
     public String deleteStudent(@RequestParam UUID id) {
         studentService.delete(id);
