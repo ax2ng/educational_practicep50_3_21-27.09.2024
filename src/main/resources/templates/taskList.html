@@ -6,7 +6,8 @@
   <title>Список задач</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
+<body onload="setInitialBackgroundColor()">
+<div th:insert="blocks/header"></div>
 <div class="container">
   <h1 class="mt-5">Список задач</h1>
 
@@ -56,22 +57,12 @@
       <div th:if="${#fields.hasErrors('status')}" th:errors="{status}" class='text-danger'></div>
     </div>
 
-    <fieldset class='form-group'>
-      <legend>Выберите участников:</legend>
-      <th:block th:each='employee : ${employees}'>
-        <div class='form-check'>
-          <input type='checkbox'
-                 id='employee-${employee.id}'
-                 name='participantIds'
-                 value='${employee.id}'
-                 class='form-check-input'>
-          <label class='form-check-label'
-                 for='employee-${employee.id}'>
-            [[${employee.firstName} + ' ' + ${employee.lastName}]]
-          </label>
-        </div>
+    <label for="employees">Выберите студентов:</label>
+    <select id="employees" name="employeeIds" multiple>
+      <th:block th:each="employee : ${employees}">
+        <option th:value="${employee.id}" th:text="${employee.firstName} + ' ' + ${employee.lastName}"></option>
       </th:block>
-    </fieldset>
+    </select>
 
     <!-- Кнопка добавления -->
     <button type='submit' class='btn btn-primary'>Добавить задачу</button>
@@ -183,9 +174,48 @@
   <!-- Ссылки на другие страницы -->
 </div>
 
-<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script>
+    // Set initial background color from localStorage
+    function setInitialBackgroundColor() {
+        const savedColor = localStorage.getItem('backgroundColor');
+        if (savedColor) {
+            document.body.style.backgroundColor = savedColor;
+        }
+    }
 
+    // Greeting based on time of day
+    const greetingElement = document.getElementById('greeting');
+    const currentHour = new Date().getHours();
+
+    if (currentHour < 12) {
+        greetingElement.textContent = 'Доброе утро!';
+    } else if (currentHour < 18) {
+        greetingElement.textContent = 'Добрый день!';
+    } else {
+        greetingElement.textContent = 'Добрый вечер!';
+    }
+
+    // Change background color function
+    function changeBackgroundColor() {
+        const colors = ['#FF5733', '#33FF57', '#3357FF', '#F1C40F', '#8E44AD'];
+        const newColor = colors[Math.floor(Math.random() * colors.length)];
+        document.body.style.backgroundColor = newColor;
+
+        // Save the selected color to localStorage
+        localStorage.setItem('backgroundColor', newColor);
+    }
+
+    // Counter function
+    let count = 0;
+
+    function incrementCounter() {
+        count++;
+        document.getElementById('clickCount').textContent = count;
+    }
+  </script>
+
+  <script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

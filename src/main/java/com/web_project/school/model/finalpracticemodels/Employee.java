@@ -56,6 +56,14 @@ public class Employee {
     )
     private List<Project> projects;
 
+//    @ManyToMany
+//    @JoinTable(
+//            name = "employee_projects",
+//            joinColumns = @JoinColumn(name = "employee_id"),
+//            inverseJoinColumns = @JoinColumn(name = "project_id")
+//    )
+//    private List<Project> projects;
+
     public Employee() {}
 
     public Employee(UUID id, String login, String password, String email, String firstName, String lastName, String middleName, String phoneNumber, LocalDate birthDate, String avatar, String position, List<Project> projects) {

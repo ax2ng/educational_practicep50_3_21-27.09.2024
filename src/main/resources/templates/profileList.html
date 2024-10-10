@@ -26,7 +26,8 @@
         }
     </style>
 </head>
-<body>
+<body onload="setInitialBackgroundColor()">
+<div th:insert="blocks/header"></div>
 
 <h1>Список профилей студентов</h1>
 
@@ -84,10 +85,48 @@
     </th:block>
 </ul>
 
-<!-- Ссылки на другие страницы -->
-<a href='/students/all'>Студенты</a><br/>
-<a href='/products/all'>Продукты</a><br/>
-<a href='/orders/all'>Заказы</a><br/>
+<script>
+    // Set initial background color from localStorage
+    function setInitialBackgroundColor() {
+        const savedColor = localStorage.getItem('backgroundColor');
+        if (savedColor) {
+            document.body.style.backgroundColor = savedColor;
+        }
+    }
 
+    // Greeting based on time of day
+    const greetingElement = document.getElementById('greeting');
+    const currentHour = new Date().getHours();
+
+    if (currentHour < 12) {
+        greetingElement.textContent = 'Доброе утро!';
+    } else if (currentHour < 18) {
+        greetingElement.textContent = 'Добрый день!';
+    } else {
+        greetingElement.textContent = 'Добрый вечер!';
+    }
+
+    // Change background color function
+    function changeBackgroundColor() {
+        const colors = ['#FF5733', '#33FF57', '#3357FF', '#F1C40F', '#8E44AD'];
+        const newColor = colors[Math.floor(Math.random() * colors.length)];
+        document.body.style.backgroundColor = newColor;
+
+        // Save the selected color to localStorage
+        localStorage.setItem('backgroundColor', newColor);
+    }
+
+    // Counter function
+    let count = 0;
+
+    function incrementCounter() {
+        count++;
+        document.getElementById('clickCount').textContent = count;
+    }
+</script>
+
+<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

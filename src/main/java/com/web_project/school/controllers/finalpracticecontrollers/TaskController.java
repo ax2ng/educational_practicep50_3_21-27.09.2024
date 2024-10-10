@@ -46,7 +46,7 @@ public class TaskController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     @PostMapping("/add")
-    public String addTask(@Valid @ModelAttribute("task") Task task, BindingResult result, @RequestParam String chatType, Model model) {
+    public String addTask(@Valid @ModelAttribute("task") Task task, BindingResult result, @RequestParam(required = false) UUID[] employeeIds, @RequestParam String chatType, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("message", "Пожалуйста, исправьте ошибки в форме.");
             return "projectList"; // Возврат к шаблону с ошибкой
@@ -91,6 +91,14 @@ public class TaskController {
         task.setChat(chat);
 
         taskService.add(task);
+
+//        if (employeeIds != null) {
+//            for (UUID employeeId : employeeIds) {
+//                Employee employee = employeeService.findById(employeeId);
+//                employee.ge().add(task); // Добавляем продукт к студенту
+//                employeeService.update(employee); // Обновляем студента в базе данных
+//            }
+//        }
         return "redirect:/tasks/all";
     }
 

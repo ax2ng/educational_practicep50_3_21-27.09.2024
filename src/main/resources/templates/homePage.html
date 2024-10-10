@@ -3,9 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <title>Домашняя страница</title>
+    <style>
+        body {
+            transition: background-color 0.5s;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        #counter {
+            margin-top: 20px;
+            font-size: 24px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #title {
+            text-align: center;
+            font-size: 36px; /* Large font size */
+            margin-top: 40px; /* Space above the title */
+        }
+    </style>
 </head>
-<body>
+<body onload="setInitialBackgroundColor()">
 <div th:insert="blocks/header"></div>
-<p th:text="${name}"/>
+
+<div id="title">ИС управления задачами и проектами</div>
+
+<p id="greeting"></p>
+
+<div id="counter">Количество нажатий: <span id="clickCount">0</span></div>
+<button onclick="incrementCounter()">Нажми меня!</button>
+
+<script>
+    // Set initial background color from localStorage
+    function setInitialBackgroundColor() {
+        const savedColor = localStorage.getItem('backgroundColor');
+        if (savedColor) {
+            document.body.style.backgroundColor = savedColor;
+        }
+    }
+
+    // Greeting based on time of day
+    const greetingElement = document.getElementById('greeting');
+    const currentHour = new Date().getHours();
+
+    if (currentHour < 12) {
+        greetingElement.textContent = 'Доброе утро!';
+    } else if (currentHour < 18) {
+        greetingElement.textContent = 'Добрый день!';
+    } else {
+        greetingElement.textContent = 'Добрый вечер!';
+    }
+
+    // Change background color function
+    function changeBackgroundColor() {
+        const colors = ['#FF5733', '#33FF57', '#3357FF', '#F1C40F', '#8E44AD'];
+        const newColor = colors[Math.floor(Math.random() * colors.length)];
+        document.body.style.backgroundColor = newColor;
+
+        // Save the selected color to localStorage
+        localStorage.setItem('backgroundColor', newColor);
+    }
+
+    // Counter function
+    let count = 0;
+
+    function incrementCounter() {
+        count++;
+        document.getElementById('clickCount').textContent = count;
+    }
+</script>
 </body>
 </html>
