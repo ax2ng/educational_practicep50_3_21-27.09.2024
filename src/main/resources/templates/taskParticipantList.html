@@ -1,0 +1,96 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Список участников задач</title>-->
+<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container">-->
+<!--    <h1 class="mt-5">Список участников задач</h1>-->
+
+<!--    &lt;!&ndash; Форма для добавления нового участника задачи &ndash;&gt;-->
+<!--    <form action="/task-participants/add" method="post" th:object="${taskParticipant}" class="mb-4">-->
+<!--        <div class="form-group">-->
+<!--            <label for="task">Выберите задачу:</label>-->
+<!--            <select id="task" name="task.id" class="form-control" th:field="*{task.id}">-->
+<!--                <th:block th:each="task : ${tasks}">-->
+<!--                    <option th:value="${task.id}" th:text="${task.taskName}"></option>-->
+<!--                </th:block>-->
+<!--            </select>-->
+<!--            <div th:if="${#fields.hasErrors('task')}" th:errors="{task}" class='text-danger'></div>-->
+<!--        </div>-->
+
+<!--        <div class="form-group">-->
+<!--            <label for="employee">Выберите сотрудника:</label>-->
+<!--            <select id="employee" name="employee.id" class="form-control" th:field="*{employee.id}">-->
+<!--                <th:block th:each="employee : ${employees}">-->
+<!--                    <option th:value="${employee.id}" th:text="${employee.firstName} + ' ' + ${employee.lastName}"></option>-->
+<!--                </th:block>-->
+<!--            </select>-->
+<!--            <div th:if="${#fields.hasErrors('employee')}" th:errors="{employee}" class='text-danger'></div>-->
+<!--        </div>-->
+
+<!--        <button type='submit' class='btn btn-primary'>Добавить участника</button>-->
+<!--    </form>-->
+
+<!--    &lt;!&ndash; Список всех участников задач &ndash;&gt;-->
+<!--    <h2>Все участники:</h2>-->
+<!--    <ul class='list-group mb-4'>-->
+<!--        <th:block th:each='participant : ${participants}'>-->
+<!--            <li class='list-group-item'>-->
+<!--                Задача:-->
+<!--                <span th:text='${participant.task.taskName}'></span>,-->
+<!--                Сотрудник:-->
+<!--                <span th:text='${participant.employee.firstName} + " " + ${participant.employee.lastName}'></span>-->
+
+<!--                &lt;!&ndash; Форма для обновления участника задачи &ndash;&gt;-->
+<!--                Обновить:-->
+<!--                <form action='/task-participants/update' method='post' style='display:inline;'>-->
+<!--                    <input type='hidden' name='id' th:value='${participant.id}'/>-->
+
+<!--                    &lt;!&ndash; Выпадающий список для выбора задачи &ndash;&gt;-->
+<!--                    Задача:-->
+<!--                    <select name='task.id'>-->
+<!--                        <th:block th:each='task : ${tasks}'>-->
+<!--                            <option th:value='${task.id}'-->
+<!--                                    th:text='${task.taskName}'-->
+<!--                                    th:selected='${task.id == participant.task.id}'></option>-->
+<!--                        </th:block>-->
+<!--                    </select>-->
+
+<!--                    &lt;!&ndash; Выпадающий список для выбора сотрудника &ndash;&gt;-->
+<!--                    Сотрудник:-->
+<!--                    <select name='employee.id'>-->
+<!--                        <th:block th:each='employee : ${employees}'>-->
+<!--                            <option th:value='${employee.id}'-->
+<!--                                    th:text='${employee.firstName} + " " + ${employee.lastName}'-->
+<!--                                    th:selected='${employee.id == participant.employee.id}'></option>-->
+<!--                        </th:block>-->
+<!--                    </select>-->
+
+<!--                    &lt;!&ndash; Кнопка обновления &ndash;&gt;-->
+<!--                    <button type='submit' class='btn btn-warning'>Обновить</button>-->
+<!--                </form>-->
+
+<!--                &lt;!&ndash; Форма для удаления участника задачи &ndash;&gt;-->
+<!--                Удалить:-->
+<!--                <form action='/task-participants/delete' method='post' style='display:inline;'>-->
+<!--                    <input type='hidden' name='id' th:value='${participant.id}'/>-->
+<!--                    <button type='submit' class='btn btn-danger'>Удалить</button>-->
+<!--                </form>-->
+<!--            </li>-->
+<!--        </th:block>-->
+<!--    </ul>-->
+
+<!--    &lt;!&ndash; Ссылки на другие страницы &ndash;&gt;-->
+<!--    ...-->
+<!--</div>-->
+
+<!--<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
+<!--<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>-->
+<!--<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
+
+<!--</body>-->
+<!--</html>-->

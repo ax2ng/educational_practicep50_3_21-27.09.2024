@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang='en' xmlns:th='http://www.thymeleaf.org'>
+<head>
+  <meta charset='UTF-8'>
+  <title>Список чатов</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    h1, h2 {
+        color: #333;
+    }
+    form {
+        margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Создание чата</h1>
+
+<!-- Форма для добавления нового чата -->
+<form action='/chats/add' method='post' th:object='${chat}'>
+  <label for="chatType">ChatType:</label>
+  <textarea id="chatType" name='chatType' placeholder='Введите тип чата' required></textarea>
+
+  <!-- Кнопка для добавления чата -->
+  <button type='submit'>Добавить чат</button>
+</form>
+
+<h2>Все чаты:</h2>
+
+<ul>
+  <th:block th:each='chat : ${chats}'>
+    <li>
+      <strong>Chat ID:</strong>
+      <span th:text='${chat.id}'></span> -
+      <strong>Тип чата:</strong>
+      <span th:text='${chat.chatType}'></span>
+
+      <!-- Форма для удаления чата -->
+      Удалить:
+      <form action='/chats/delete' method='post' style='display:inline;'>
+        <input type='hidden' name='id' th:value='${chat.id}'/>
+        <button type='submit'>Удалить чат</button>
+      </form>
+    </li>
+  </th:block>
+</ul>
+
+<!-- Ссылки на другие страницы -->
+<a href='/students/all'>Студенты</a><br/>
+<a href='/products/all'>Продукты</a><br/>
+<a href='/orders/all'>Заказы</a><br/>
+
+</body>
+</html>

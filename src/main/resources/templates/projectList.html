@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список проектов</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Создание проектов</h1>
+
+    <div th:if="${message}" class="alert alert-danger">
+        <p th:text="${message}"></p>
+    </div>
+
+    <!-- Форма для добавления нового проекта -->
+    <form action="/projects/add" method="post" th:object="${project}" class="mb-4">
+
+        <div class="form-group">
+            <label for="addProjectName">Название проекта</label>
+            <input type="text" id="addProjectName" name="projectName" class="form-control" th:field="*{projectName}" required>
+            <div th:if="${#fields.hasErrors('projectName')}" th:errors="*{projectName}" class="text-danger"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="addProjectDescription">Описание проекта</label>
+            <textarea id="addProjectDescription" name="projectDescription" class="form-control" th:field="*{projectDescription}" required></textarea>
+            <div th:if="${#fields.hasErrors('projectDescription')}" th:errors="*{projectDescription}" class="text-danger"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="addStartDate">Дата начала</label>
+            <input type="date" id="addStartDate" name="startDate" class="form-control" th:field="*{startDate}" required>
+            <div th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}" class='text-danger'></div>
+        </div>
+
+        <div class="form-group">
+            <label for="addEndDate">Дата окончания</label>
+            <input type="date" id="addEndDate" name="endDate" class="form-control" th:field="*{endDate}" required>
+            <div th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}" class='text-danger'></div>
+        </div>
+
+        <div class="form-group">
+            <label for="addStatus">Выберите статус:</label>
+            <select id="addStatus" name="status.id" class="form-control" th:field="*{status.id}">
+                <th:block th:each="status : ${statuses}">
+                    <option th:value="${status.id}" th:text="${status.statusName}"></option>
+                </th:block>
+            </select>
+            <div th:if="${#fields.hasErrors('status')}" th:errors="{status}" class='text-danger'></div>
+        </div>
+
+        <label for="chatType">Тип чата:</label>
+        <textarea id="chatType" name="chatType" placeholder="Введите тип чата" required></textarea>
+
+        <label for="employees">Выберите студентов:</label>
+        <select id="employees" name="employeeIds" multiple>
+            <th:block th:each="employee : ${employees}">
+                <option th:value="${employee.id}" th:text="${employee.firstName} + ' ' + ${employee.lastName}"></option>
+            </th:block>
+        </select>
+
+        <!-- Кнопка добавления -->
+        <button type='submit' class='btn btn-primary'>Добавить проект</button>
+    </form>
+
+    <!-- Список всех проектов -->
+    <h2>Все проекты:</h2>
+    <div class="row">
+        <th:block th:each='project : ${projects}'>
+            <div class='col-md-4 mb-4'>
+                <div class='card'>
+                    <div class='card-body'>
+                        <h5 class='card-title' th:text='${project.projectName}'></h5>
+                        <p class='card-text'>
+                            Описание:
+                            <span th:text='${project.projectDescription}'></span><br/>
+                            Дата начала:
+                            <span th:text='${project.startDate}'></span><br/>
+                            Дата окончания:
+                            <span th:text='${project.endDate}'></span><br/>
+                            Статус:
+                            <span th:text='${project.status.statusName}'></span>
+                        </p>
+
+                        <!-- Форма для обновления проекта -->
+                        <h5>Обновить проект:</h5>
+                        <form action='/projects/update' method='post' class='mb-3'>
+                            <input type='hidden' name='id' th:value='${project.id}'/>
+
+                            Название:
+                            <input type='text' id='updateProjectName' name='projectName'
+                                   class='form-control'
+                                   th:value='${project.projectName}' required />
+
+                            Описание:
+                            <textarea id='updateProjectDescription' name='projectDescription'
+                                      required
+                                      class='form-control'
+                                      th:text="${project.projectDescription}"></textarea>
+
+                            Дата начала:
+                            <input type='date' id='updateStartDate' name='startDate'
+                                   class='form-control'
+                                   th:value="${project.startDate}" required />
+
+                            Дата окончания:
+                            <input type='date' id='updateEndDate' name='endDate'
+                                   class='form-control'
+                                   th:value="${project.endDate}" required />
+
+                            Статус:
+                            <select id='updateStatus' name='status.id'
+                                    class='form-control'>
+                                <th:block th:each='status : ${statuses}'>
+                                    <option th:value='${status.id}'
+                                            th:text='${status.statusName}'
+                                            th:selected='${status.id == project.status.id}'></option>
+                                </th:block>
+                            </select>
+
+                            <!-- Выпадающий список для выбора профиля -->
+                            <select name="chatId" required>
+                                <option value="" disabled selected>Выберите чат</option>
+                                <th:block th:each="chat : ${chats}">
+                                    <option th:value="${chat.id}" th:text="${chat.chatType}"></option> <!-- Отображаем биографию профиля -->
+                                </th:block>
+                            </select>
+
+                            <select id="employeesUpdate" name="employeeIds" multiple>
+                                <th:block th:each="employee : ${employees}">
+                                    <option th:value="${employee.id}"
+                                            th:text="${employee.firstName} + ' ' + ${employee.lastName}"
+                                            th:selected="${#lists.contains(project.employees, employee)}"></option> <!-- Выбор текущих студентов -->
+                                </th:block>
+                            </select>
+
+                            <!-- Кнопка обновления -->
+                            <button type='submit' class='btn btn-warning'>Обновить</button>
+                        </form>
+
+                        <!-- Форма для удаления проекта -->
+                        Удалить проект:
+                        <form action='/projects/delete' method='post'>
+                            <input type='hidden' name='id' th:value='${project.id}'/>
+                            <button type='submit' class='btn btn-danger'>Удалить</button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+
+</div>
+
+<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

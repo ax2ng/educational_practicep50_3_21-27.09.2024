@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Список сообщений чата</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h1 class="mt-5">Список сообщений чата</h1>
+
+  <!-- Форма для добавления нового сообщения чата -->
+  <form action="/chat-messages/add" method="post" th:object="${chatMessage}" class="mb-4">
+    <div class="form-group">
+      <label for="message">Сообщение</label>
+      <textarea id="message" name="message" class="form-control" th:field="*{message}" required></textarea>
+      <div th:if="${#fields.hasErrors('message')}" th:errors="*{message}" class="text-danger"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="sentDate">Дата отправки</label>
+      <input type="date" id="sentDate" name="sentDate" class="form-control" th:field="*{sentDate}" required>
+      <div th:if="${#fields.hasErrors('sentDate')}" th:errors="{sentDate}" class='text-danger'></div>
+    </div>
+
+    <div class="form-group">
+      <label for="chat">Выберите чат:</label>
+      <select id="chat" name="chat.id" class="form-control" th:field="*{chat.id}">
+        <th:block th:each="chat : ${chats}">
+          <option th:value="${chat.id}" th:text="${chat.chatType}"></option>
+        </th:block>
+      </select>
+      <div th:if="${#fields.hasErrors('chat')}" th:errors="{chat}" class='text-danger'></div>
+    </div>
+
+    <div class="form-group">
+      <label for="employee">Выберите сотрудника:</label>
+      <select id="employee" name="employee.id" class="form-control" th:field="*{employee.id}">
+        <th:block th:each="employee : ${employees}">
+          <option th:value="${employee.id}" th:text="${employee.firstName} + ' ' + ${employee.lastName}"></option>
+        </th:block>
+      </select>
+      <div th:if="${#fields.hasErrors('employee')}" th:errors="{employee}" class='text-danger'></div>
+    </div>
+
+    <button type='submit' class='btn btn-primary'>Добавить сообщение</button>
+  </form>
+
+  <!-- Список всех сообщений чата -->
+  <h2>Все сообщения:</h2>
+  <ul class='list-group mb-4'>
+    <th:block th:each='chatMessage : ${chatMessages}'>
+      <li class='list-group-item'>
+        Сообщение:
+        <span th:text='${chatMessage.message}'></span>,
+        Дата отправки:
+        <span th:text='${chatMessage.sentDate}'></span>,
+        Чат:
+        <span th:text='${chatMessage.chat.chatType}'></span>,
+
+        <!-- Форма для обновления сообщения -->
+        Обновить:
+        <form action='/chat-messages/update' method='post' style='display:inline;'>
+          <input type='hidden' name='id' th:value='${chatMessage.id}'/>
+          Сообщение:
+          <textarea id='updateChatMessageMessage' name='message'
+                    required
+                    class='form-control'
+                    th:text="${chatMessage.message}"></textarea>
+
+          Дата отправки:
+          <input type='date' name='sentDate' th:value='${chatMessage.sentDate}' required />
+
+          <!-- Выпадающий список для выбора чата -->
+          Чат:
+          <select name='chat.id'>
+            <th:block th:each='chat : ${chats}'>
+              <option th:value='${chat.id}'
+                      th:text='${chat.chatType}'
+                      th:selected='${chat.id == chatMessage.chat.id}'></option>
+            </th:block>
+          </select>
+
+          <!-- Выпадающий список для выбора сотрудника -->
+          Сотрудник:
+          <select name='employee.id'>
+            <th:block th:each='employee : ${employees}'>
+              <option th:value='${employee.id}'
+                      th:text='${employee.firstName}'
+                      th:selected='${employee.id == chatMessage.employee.id}'></option>
+            </th:block>
+          </select>
+
+          <!-- Кнопка обновления -->
+          <button type='submit' class='btn btn-warning'>Обновить</button>
+        </form>
+
+        <!-- Форма для удаления сообщения -->
+        Удалить:
+        <form action='/chat-messages/delete' method='post' style='display:inline;'>
+          <input type='hidden' name='id' th:value='${chatMessage.id}'/>
+          <button type='submit' class='btn btn-danger'>Удалить</button>
+        </form>
+      </li>
+    </th:block>
+  </ul>
+
+</div>
+
+<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

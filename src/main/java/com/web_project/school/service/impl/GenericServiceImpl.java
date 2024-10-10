@@ -8,7 +8,6 @@ import java.util.UUID;
 
 public class GenericServiceImpl<T> implements GenericService<T> {
 
-    private StudentRepository studentRepository;
 
     private final JpaRepository<T, UUID> repository;
 

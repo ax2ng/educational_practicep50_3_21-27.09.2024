@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Список файлов чата</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h1 class="mt-5">Список файлов чата</h1>
+
+  <!-- Форма для добавления нового файла чата -->
+  <form action="/chat-files/add" method="post" th:object="${chatFile}" class="mb-4">
+    <div class="form-group">
+      <label for="fileName">Имя файла</label>
+      <input type="text" id="fileName" name="fileName" class="form-control" th:field="*{fileName}" required>
+      <div th:if="${#fields.hasErrors('fileName')}" th:errors="*{fileName}" class="text-danger"></div>
+    </div>
+
+    <!-- Поле для загрузки аватара -->
+    <div class='form-group'>
+      <label for='fileContent'>Файл-контент:</label>
+      <input type='file' id='fileContent' name='fileContent' class='form-control-file'>
+    </div>
+
+    <div class="form-group">
+      <label for="message">Выберите сообщение:</label>
+      <select id="message" name="message.id" class="form-control" th:field="*{message.id}">
+        <th:block th:each="message : ${messages}">
+          <option th:value="${message.id}" th:text="${message.message}"></option>
+        </th:block>
+      </select>
+      <div th:if="${#fields.hasErrors('message')}" th:errors="{message}" class='text-danger'></div>
+    </div>
+
+    <button type='submit' class='btn btn-primary'>Добавить файл</button>
+  </form>
+
+  <!-- Список всех файлов чата -->
+  <h2>Все файлы чата:</h2>
+  <ul class='list-group mb-4'>
+    <th:block th:each='chatFile : ${chatFiles}'>
+      <li class='list-group-item'>
+        Имя файла:
+        <span th:text='${chatFile.fileName}'></span>,
+        Содержимое:
+        <span th:text='${chatFile.fileContent}'></span>,
+        Сообщение:
+        <span th:text='${chatFile.message.message}'></span>
+
+        <!-- Форма для обновления файла чата -->
+        Обновить:
+        <form action='/chat-files/update' method='post' style='display:inline;'>
+          <input type='hidden' name='id' th:value='${chatFile.id}'/>
+          Имя файла:
+          <input type='text' name='fileName' th:value='${chatFile.fileName}' required />
+          Содержимое:
+          <input type='text' name='fileContent' th:value='${chatFile.fileContent}' required />
+
+          <!-- Выпадающий список для выбора сообщения -->
+          Сообщение:
+          <select name='message.id'>
+            <th:block th:each='message : ${messages}'>
+              <option th:value='${message.id}'
+                      th:text='${message.message}'
+                      th:selected='${message.id == chatFile.message.id}'></option>
+            </th:block>
+          </select>
+
+          <!-- Кнопка обновления -->
+          <button type='submit' class='btn btn-warning'>Обновить</button>
+        </form>
+
+        <!-- Форма для удаления файла чата -->
+        Удалить:
+        <form action='/chat-files/delete' method='post' style='display:inline;'>
+          <input type='hidden' name='id' th:value='${chatFile.id}'/>
+          <button type='submit' class='btn btn-danger'>Удалить</button>
+        </form>
+      </li>
+    </th:block>
+  </ul>
+
+</div>
+
+<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

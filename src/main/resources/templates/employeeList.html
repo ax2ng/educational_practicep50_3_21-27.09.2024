@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Список сотрудников</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h1 class="mt-5">Добавление сотрудников</h1>
+
+  <!-- Форма для добавления нового сотрудника -->
+  <form action="/employees/add" method="post" th:object="${employee}" class="mb-4">
+    <div class="form-group">
+      <label for="login">Логин</label>
+      <input type="text" id="login" name="login" class="form-control" th:field="*{login}" required>
+      <div th:if="${#fields.hasErrors('login')}" th:errors="*{login}" class="text-danger"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Пароль</label>
+      <input type="password" id="password" name="password" class="form-control" th:field="*{password}" required>
+      <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="text-danger"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" class="form-control" th:field="*{email}" required>
+      <div th:if="${#fields.hasErrors('email')}" th:errors="{email}" class='text-danger'></div>
+    </div>
+
+    <div class="form-group">
+      <label for="firstName">Имя</label>
+      <input type="text" id="firstName" name="firstName" class="form-control" th:field="*{firstName}" required>
+      <div th:if="${#fields.hasErrors('firstName')}" th:errors="{firstName}" class='text-danger'></div>
+    </div>
+
+    <div class="form-group">
+      <label for="lastName">Фамилия</label>
+      <input type="text" id="lastName" name="lastName" class="form-control" th:field="*{lastName}" required>
+      <div th:if="${#fields.hasErrors('lastName')}" th:errors="{lastName}" class='text-danger'></div>
+    </div>
+
+    <div class="form-group">
+      <label for="middleName">Отчество</label>
+      <input type="text" id="middleName" name="middleName" class="form-control" th:field="*{middleName}">
+    </div>
+
+    <div class="form-group">
+      <label for="phoneNumber">Номер телефона</label>
+      <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" th:field="*{phoneNumber}">
+    </div>
+
+    <div class="form-group">
+      <label for="birthDate">Дата рождения</label>
+      <input type='date' id='birthDate' name='birthDate' class='form-control' th:field='*{birthDate}'/>
+    </div>
+
+    <!-- Поле для загрузки аватара -->
+    <div class='form-group'>
+      <label for='avatar'>Аватар:</label>
+      <input type='file' id='avatar' name='avatar' class='form-control-file'>
+    </div>
+
+    <!-- Поле для выбора должности -->
+    <div class='form-group'>
+      <label for='position'>Должность:</label>
+      <input type='text' id='position' name='position' class='form-control' th:field='*{position}' required />
+    </div>
+
+    <!-- Кнопка добавления -->
+    <button type='submit' class='btn btn-primary'>Добавить сотрудника</button>
+  </form>
+
+  <!-- Список всех сотрудников -->
+  <h2>Все сотрудники:</h2>
+  <ul class='list-group mb-4'>
+    <th:block th:each='employee : ${employees}'>
+      <li class='list-group-item'>
+        Логин:
+        <span th:text='${employee.login}'></span>,
+        Имя:
+        <span th:text='${employee.firstName}'></span>,
+        Фамилия:
+        <span th:text='${employee.lastName}'></span>,
+        Email:
+        <span th:text='${employee.email}'></span>,
+        Должность:
+        <span th:text='${employee.position}'></span>
+
+        <!-- Форма для обновления сотрудника -->
+        Обновить:
+        <form action='/employees/update' method='post' style='display:inline;'>
+          <input type='hidden' name='id' th:value='${employee.id}'/>
+          Логин:
+          <input type='text' name='login' th:value='${employee.login}' required />
+          Имя:
+          <input type='password' name='password' th:value='${employee.password}' required />
+          Email:
+          <input type='email' name='email' th:value='${employee.email}' required />
+          Имя:
+          <input type='text' name='firstName' th:value='${employee.firstName}' required />
+          Фамилия:
+          <input type='text' name='lastName' th:value='${employee.lastName}' required />
+          Отчество:
+          <input type='text' name='middleName' th:value='${employee.middleName}' required />
+          Номер телефона:
+          <input type='text' name='phoneNumber' th:value='${employee.phoneNumber}' required />
+          ДР:
+          <input type='date' name='birthDate' th:value='${employee.birthDate}' required />
+          ДР:
+          <input type='text' name='avatar' th:value='${employee.avatar}' required />
+          Должность:
+          <input type='text' name='position' th:value='${employee.position}' required />
+
+          <!-- Кнопка обновления -->
+          <button type='submit' class='btn btn-warning'>Обновить</button>
+        </form>
+
+        <!-- Форма для удаления сотрудника -->
+        Удалить:
+        <form action='/employees/delete' method='post' style='display:inline;'>
+          <input type='hidden' name='id' th:value='${employee.id}'/>
+          <button type='submit' class='btn btn-danger'>Удалить</button>
+        </form>
+      </li>
+    </th:block>
+  </ul>
+
+
+</div>
+
+<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

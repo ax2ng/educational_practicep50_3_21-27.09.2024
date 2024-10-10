@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список этапов</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Список этапов</h1>
+
+    <!-- Форма для добавления нового этапа -->
+    <form action="/milestones/add" method="post" th:object="${milestone}" class="mb-4">
+        <div class="form-group">
+            <label for="milestoneName">Название этапа</label>
+            <input type="text" id="milestoneName" name="milestoneName" class="form-control" th:field="*{milestoneName}" required>
+            <div th:if="${#fields.hasErrors('milestoneName')}" th:errors="*{milestoneName}" class="text-danger"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="achievementDate">Дата достижения</label>
+            <input type="date" id="achievementDate" name="achievementDate" class="form-control" th:field="*{achievementDate}" required>
+            <div th:if="${#fields.hasErrors('achievementDate')}" th:errors="{achievementDate}" class='text-danger'></div>
+        </div>
+
+        <div class="form-group">
+            <label for="project">Выберите проект:</label>
+            <select id="project" name="project.id" class="form-control" th:field="*{project.id}">
+                <th:block th:each="project : ${projects}">
+                    <option th:value="${project.id}" th:text="${project.projectName}"></option>
+                </th:block>
+            </select>
+            <div th:if="${#fields.hasErrors('project')}" th:errors="{project}" class='text-danger'></div>
+        </div>
+
+        <button type='submit' class='btn btn-primary'>Добавить этап</button>
+    </form>
+
+    <!-- Список всех этапов -->
+    <h2>Все этапы:</h2>
+    <ul class='list-group mb-4'>
+        <th:block th:each='milestone : ${milestones}'>
+            <li class='list-group-item'>
+                Название:
+                <span th:text='${milestone.milestoneName}'></span>,
+                Дата достижения:
+                <span th:text='${milestone.achievementDate}'></span>,
+                Проект:
+                <span th:text='${milestone.project.projectName}'></span>
+
+                <!-- Форма для обновления этапа -->
+                Обновить:
+                <form action='/milestones/update' method='post' style='display:inline;'>
+                    <input type='hidden' name='id' th:value='${milestone.id}'/>
+                    Название:
+                    <input type='text' name='milestoneName' th:value='${milestone.milestoneName}' required />
+                    Дата достижения:
+                    <input type='date' name='achievementDate' th:value='${#dates.format(milestone.achievementDate, "yyyy-MM-dd")}' required />
+
+                    <!-- Выпадающий список для выбора проекта -->
+                    Проект:
+                    <select name='project.id'>
+                        <th:block th:each='project : ${projects}'>
+                            <option th:value='${project.id}'
+                                    th:text='${project.projectName}'
+                                    th:selected='${project.id == milestone.project.id}'></option>
+                        </th:block>
+                    </select>
+
+                    <!-- Кнопка обновления -->
+                    <button type='submit' class='btn btn-warning'>Обновить</button>
+                </form>
+
+                <!-- Форма для удаления этапа -->
+                Удалить:
+                <form action='/milestones/delete' method='post' style='display:inline;'>
+                    <input type='hidden' name='id' th:value='${milestone.id}'/>
+                    <button type='submit' class='btn btn-danger'>Удалить</button>
+                </form>
+            </li>
+        </th:block>
+    </ul>
+
+    <!-- Ссылки на другие страницы -->
+</div>
+
+<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

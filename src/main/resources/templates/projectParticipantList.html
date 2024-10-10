@@ -1,0 +1,94 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--  <title>Список участников проекта</title>-->
+<!--  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container">-->
+<!--  <h1 class="mt-5">Список участников проекта</h1>-->
+
+<!--  &lt;!&ndash; Форма для добавления нового участника проекта &ndash;&gt;-->
+<!--  <form action="/project-participants/add" method="post" th:object="${projectParticipant}" class="mb-4">-->
+<!--    <div class="form-group">-->
+<!--      <label for="project">Выберите проект:</label>-->
+<!--      <select id="project" name="project.id" class="form-control" th:field="*{project.id}">-->
+<!--        <th:block th:each="project : ${projects}">-->
+<!--          <option th:value="${project.id}" th:text="${project.projectName}"></option>-->
+<!--        </th:block>-->
+<!--      </select>-->
+<!--      <div th:if="${#fields.hasErrors('project')}" th:errors="*{project}" class='text-danger'></div>-->
+<!--    </div>-->
+
+<!--    <div class="form-group">-->
+<!--      <label for="employee">Выберите сотрудника:</label>-->
+<!--      <select id="employee" name="employee.id" class="form-control" th:field="*{employee.id}">-->
+<!--        <th:block th:each="employee : ${employees}">-->
+<!--          <option th:value="${employee.id}" th:text="${employee.firstName} + ' ' + ${employee.lastName}"></option>-->
+<!--        </th:block>-->
+<!--      </select>-->
+<!--      <div th:if="${#fields.hasErrors('employee')}" th:errors="*{employee}" class='text-danger'></div>-->
+<!--    </div>-->
+
+<!--    <button type='submit' class='btn btn-primary'>Добавить участника</button>-->
+<!--  </form>-->
+
+<!--  &lt;!&ndash; Список всех участников проекта &ndash;&gt;-->
+<!--  <h2>Все участники:</h2>-->
+<!--  <ul class='list-group mb-4'>-->
+<!--    <th:block th:each='participant : ${participants}'>-->
+<!--      <li class='list-group-item'>-->
+<!--        Проект:-->
+<!--        <span th:text='${participant.project.projectName}'></span>,-->
+<!--        Сотрудник:-->
+<!--        <span th:text='${participant.employee.firstName} + " " + ${participant.employee.lastName}'></span>-->
+
+<!--        &lt;!&ndash; Форма для обновления участника проекта &ndash;&gt;-->
+<!--        Обновить:-->
+<!--        <form action='/project-participants/update' method='post' style='display:inline;'>-->
+<!--          <input type='hidden' name='id' th:value='${participant.id}'/>-->
+
+<!--          &lt;!&ndash; Выпадающий список для выбора проекта &ndash;&gt;-->
+<!--          Проект:-->
+<!--          <select name='project.id'>-->
+<!--            <th:block th:each='project : ${projects}'>-->
+<!--              <option th:value='${project.id}'-->
+<!--                      th:text='${project.projectName}'-->
+<!--                      th:selected='${project.id == participant.project.id}'></option>-->
+<!--            </th:block>-->
+<!--          </select>-->
+
+<!--          &lt;!&ndash; Выпадающий список для выбора сотрудника &ndash;&gt;-->
+<!--          Сотрудник:-->
+<!--          <select name='employee.id'>-->
+<!--            <th:block th:each='employee : ${employees}'>-->
+<!--              <option th:value='${employee.id}'-->
+<!--                      th:text='${employee.firstName} + " " + ${employee.lastName}'-->
+<!--                      th:selected='${employee.id == participant.employee.id}'></option>-->
+<!--            </th:block>-->
+<!--          </select>-->
+
+<!--          &lt;!&ndash; Кнопка обновления &ndash;&gt;-->
+<!--          <button type='submit' class='btn btn-warning'>Обновить</button>-->
+<!--        </form>-->
+
+<!--        &lt;!&ndash; Форма для удаления участника проекта &ndash;&gt;-->
+<!--        Удалить:-->
+<!--        <form action='/project-participants/delete' method='post' style='display:inline;'>-->
+<!--          <input type='hidden' name='id' th:value='${participant.id}'/>-->
+<!--          <button type='submit' class='btn btn-danger'>Удалить</button>-->
+<!--        </form>-->
+<!--      </li>-->
+<!--    </th:block>-->
+<!--  </ul>-->
+
+<!--</div>-->
+
+<!--<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
+<!--<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>-->
+<!--<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
+
+<!--</body>-->
+<!--</html>-->

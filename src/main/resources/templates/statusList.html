@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список статусов</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Список статусов</h1>
+
+    <!-- Форма для добавления нового статуса -->
+    <form action="/statuses/add" method="post" th:object="${status}" class="mb-4">
+        <div class="form-group">
+            <label for="statusName">Название статуса</label>
+            <input type="text" id="statusName" name="statusName" class="form-control" th:field="*{statusName}" required>
+            <div th:if="${#fields.hasErrors('statusName')}" th:errors="*{statusName}" class="text-danger"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="priority">Приоритет</label>
+            <input type="text" id="priority" name="priority" class="form-control" th:field="*{priority}" required>
+            <div th:if="${#fields.hasErrors('priority')}" th:errors="{priority}" class="text-danger"></div>
+        </div>
+
+        <button type='submit' class='btn btn-primary'>Добавить статус</button>
+    </form>
+
+    <!-- Список всех статусов -->
+    <h2>Все статусы:</h2>
+    <ul class='list-group mb-4'>
+        <th:block th:each='status : ${statuses}'>
+            <li class='list-group-item'>
+                Название:
+                <span th:text='${status.statusName}'></span>,
+                Приоритет:
+                <span th:text='${status.priority}'></span>
+
+                <!-- Форма для обновления статуса -->
+                Обновить:
+                <form action='/statuses/update' method='post' style='display:inline;'>
+                    <input type='hidden' name='id' th:value='${status.id}'/>
+                    Название:
+                    <input type='text' name='statusName' th:value='${status.statusName}' required />
+                    Приоритет:
+                    <input type='text' name='priority' th:value='${status.priority}' required />
+
+                    <!-- Кнопка обновления -->
+                    <button type='submit' class='btn btn-warning'>Обновить</button>
+                </form>
+
+                <!-- Форма для удаления статуса -->
+                Удалить:
+                <form action='/statuses/delete' method='post' style='display:inline;'>
+                    <input type='hidden' name='id' th:value='${status.id}'/>
+                    <button type='submit' class='btn btn-danger'>Удалить</button>
+                </form>
+            </li>
+        </th:block>
+    </ul>
+
+
+</div>
+
+<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

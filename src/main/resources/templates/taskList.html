@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Список задач</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h1 class="mt-5">Список задач</h1>
+
+  <!-- Форма для добавления новой задачи -->
+  <form action="/tasks/add" method="post" th:object="${task}" class="mb-4">
+    <div class="form-group">
+      <label for="addTaskName">Название проекта</label>
+      <input type="text" id="addTaskName" name="taskName" class="form-control" th:field="*{taskName}" required>
+      <div th:if="${#fields.hasErrors('taskName')}" th:errors="*{taskName}" class="text-danger"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="addTaskDescription">Описание проекта</label>
+      <textarea id="addTaskDescription" name="taskDescription" class="form-control" th:field="*{taskDescription}" required></textarea>
+      <div th:if="${#fields.hasErrors('taskDescription')}" th:errors="*{taskDescription}" class="text-danger"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="addStartDate">Дата начала</label>
+      <input type="date" id="addStartDate" name="startDate" class="form-control" th:field="*{startDate}" required>
+      <div th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}" class='text-danger'></div>
+    </div>
+
+    <div class="form-group">
+      <label for="addEndDate">Дата окончания</label>
+      <input type="date" id="addEndDate" name="endDate" class="form-control" th:field="*{endDate}" required>
+      <div th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}" class='text-danger'></div>
+    </div>
+
+    <div class="form-group">
+      <label for="project">Выберите проект:</label>
+      <select id="project" name="project.id" class="form-control" th:field="*{project.id}">
+        <th:block th:each="project : ${projects}">
+          <option th:value="${project.id}" th:text="${project.projectName}"></option>
+        </th:block>
+      </select>
+      <div th:if="${#fields.hasErrors('project')}" th:errors="{project}" class='text-danger'></div>
+    </div>
+
+    <div class="form-group">
+      <label for="status">Выберите статус:</label>
+      <select id="status" name="status.id" class="form-control" th:field="*{status.id}">
+        <th:block th:each="status : ${statuses}">
+          <option th:value="${status.id}" th:text="${status.statusName}"></option>
+        </th:block>
+      </select>
+      <div th:if="${#fields.hasErrors('status')}" th:errors="{status}" class='text-danger'></div>
+    </div>
+
+    <fieldset class='form-group'>
+      <legend>Выберите участников:</legend>
+      <th:block th:each='employee : ${employees}'>
+        <div class='form-check'>
+          <input type='checkbox'
+                 id='employee-${employee.id}'
+                 name='participantIds'
+                 value='${employee.id}'
+                 class='form-check-input'>
+          <label class='form-check-label'
+                 for='employee-${employee.id}'>
+            [[${employee.firstName} + ' ' + ${employee.lastName}]]
+          </label>
+        </div>
+      </th:block>
+    </fieldset>
+
+    <!-- Кнопка добавления -->
+    <button type='submit' class='btn btn-primary'>Добавить задачу</button>
+  </form>
+
+  <h2>Все проекты:</h2>
+  <div class="row">
+    <th:block th:each='project : ${projects}'>
+      <div class='col-md-4 mb-4'>
+        <div class='card'>
+          <div class='card-body'>
+            <h5 class='card-title' th:text='${task.projectName}'></h5>
+            <p class='card-text'>
+              Описание:
+              <span th:text='${task.projectDescription}'></span><br/>
+              Дата начала:
+              <span th:text='${task.startDate}'></span><br/>
+              Дата окончания:
+              <span th:text='${task.endDate}'></span><br/>
+             Название проекта:
+              <span th:text='${task.project.projectName}'></span><br/>
+              Статус:
+              <span th:text='${task.status.statusName}'></span>
+            </p>
+
+            <!-- Форма для обновления проекта -->
+            <h5>Обновить проект:</h5>
+            <form action='/tasks/update' method='post' class='mb-3'>
+              <input type='hidden' name='id' th:value='${task.id}'/>
+
+              Название:
+              <input type='text' id='updateTaskName' name='taskName'
+                     class='form-control'
+                     th:value='${task.taskName}' required />
+
+              Описание:
+              <textarea id='updateTaskDescription' name='taskDescription'
+                        required
+                        class='form-control'
+                        th:text="${task.taskDescription}"></textarea>
+
+              Дата начала:
+              <input type='date' id='updateStartDate' name='startDate'
+                     class='form-control'
+                     th:value="${task.startDate}" required />
+
+              Дата окончания:
+              <input type='date' id='updateEndDate' name='endDate'
+                     class='form-control'
+                     th:value="${task.endDate}" required />
+
+          <!-- Выпадающий список для выбора проекта -->
+          Проект:
+          <select name='project.id' class='form-control'>
+            <th:block th:each='project : ${projects}'>
+              <option th:value='${project.id}'
+                      th:text='${project.projectName}'
+                      th:selected='${project.id == task.project.id}'></option>
+            </th:block>
+          </select>
+
+          <!-- Выпадающий список для выбора статуса -->
+          Статус:
+          <select name='status.id' class='form-control'>
+            <th:block th:each='status : ${statuses}'>
+              <option th:value='${status.id}'
+                      th:text='${status.statusName}'
+                      th:selected='${status.id == task.status.id}'></option>
+            </th:block>
+          </select>
+
+
+          <fieldset class='form-group'>
+            <legend>Участники:</legend>
+            <th:block th:each='employee : ${employees}'>
+              <div class='form-check'>
+                <!-- Check if employee is already associated with the project -->
+                <input type='checkbox'
+                       id='updateEmployee-${employee.id}'
+                       name='participantIds'
+                       value='${employee.id}'
+                       class='form-check-input'
+                       th:checked="${#lists.contains(project.employees, employee)}">
+                <label class='form-check-label'
+                       for='updateEmployee-${employee.id}'>
+                  [[${employee.firstName} + ' ' + ${employee.lastName}]]
+                </label>
+              </div>
+            </th:block>
+          </fieldset>
+
+
+
+          <!-- Кнопка обновления -->
+          <button type='submit' class='btn btn-warning'>Обновить</button>
+        </form>
+
+        <!-- Форма для удаления задачи -->
+        Удалить:
+        <form action='/tasks/delete' method='post' style='display:inline;'>
+          <!-- Hidden field to pass task ID -->
+          <input type='hidden' name='id' th:value='${task.id}'/>
+          <button type='submit' class='btn btn-danger'>Удалить</button>
+        </form>
+      </li>
+    </th:block>
+  </ul>
+
+  <!-- Ссылки на другие страницы -->
+</div>
+
+<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

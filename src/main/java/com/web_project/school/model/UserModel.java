@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
+@Table(name = "users")
 public class UserModel {
     @Id
     @GeneratedValue
@@ -29,7 +30,8 @@ public class UserModel {
     public UserModel() {
     }
 
-    public UserModel(String username, String password, boolean active, Set<RoleEnum> roles) {
+    public UserModel(Long idUser, String username, String password, boolean active, Set<RoleEnum> roles) {
+        this.idUser = idUser;
         this.username = username;
         this.password = password;
         this.active = active;
@@ -52,11 +54,13 @@ public class UserModel {
         this.username = username;
     }
 
-    public String getPassword() {
+    public @Size(min = 8, message = "Пароль должен содержать не менее 8 символов") @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!])(?=\\S+$).*$",
+            message = "Пароль должен содержать хотя бы одну букву, одну цифру и один специальный символ (@#$%^&+=!)") String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(@Size(min = 8, message = "Пароль должен содержать не менее 8 символов") @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!])(?=\\S+$).*$",
+            message = "Пароль должен содержать хотя бы одну букву, одну цифру и один специальный символ (@#$%^&+=!)") String password) {
         this.password = password;
     }
 

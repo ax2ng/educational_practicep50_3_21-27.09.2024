@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список статистики</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Список статистики</h1>
+
+    <!-- Форма для добавления новой статистики -->
+    <form action="/statistics/add" method="post" th:object="${statistic}" class="mb-4">
+        <div class="form-group">
+            <label for="taskCount">Количество задач</label>
+            <input type="number" id="taskCount" name="taskCount" class="form-control" th:field="*{taskCount}" required>
+            <div th:if="${#fields.hasErrors('taskCount')}" th:errors="*{taskCount}" class="text-danger"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="averageTaskTime">Среднее время выполнения задач</label>
+            <input type="number" step="0.01" id="averageTaskTime" name="averageTaskTime" class="form-control" th:field="*{averageTaskTime}" required>
+            <div th:if="${#fields.hasErrors('averageTaskTime')}" th:errors="*{averageTaskTime}" class='text-danger'></div>
+        </div>
+
+        <div class="form-group">
+            <label for="completedTaskPercentage">Процент выполненных задач</label>
+            <input type="number" step="0.01" id="completedTaskPercentage" name="completedTaskPercentage" class="form-control" th:field="*{completedTaskPercentage}" required>
+            <div th:if="${#fields.hasErrors('completedTaskPercentage')}" th:errors="{completedTaskPercentage}" class='text-danger'></div>
+        </div>
+
+        <div class="form-group">
+            <label for="project">Выберите проект:</label>
+            <select id="project" name="project.id" class="form-control" th:field="*{project.id}">
+                <th:block th:each="project : ${projects}">
+                    <option th:value="${project.id}" th:text="${project.projectName}"></option>
+                </th:block>
+            </select>
+            <div th:if="${#fields.hasErrors('project')}" th:errors="{project}" class='text-danger'></div>
+        </div>
+
+        <button type='submit' class='btn btn-primary'>Добавить статистику</button>
+    </form>
+
+    <!-- Список всех записей статистики -->
+    <h2>Все записи статистики:</h2>
+    <ul class='list-group mb-4'>
+        <th:block th:each='statistic : ${statistics}'>
+            <li class='list-group-item'>
+                Количество задач:
+                <span th:text='${statistic.taskCount}'></span>,
+                Среднее время выполнения задач:
+                <span th:text='${statistic.averageTaskTime}'></span>,
+                Процент выполненных задач:
+                <span th:text='${statistic.completedTaskPercentage}'></span>,
+                Проект:
+                <span th:text='${statistic.project.projectName}'></span>
+
+                <!-- Форма для обновления статистики -->
+                Обновить:
+                <form action='/statistics/update' method='post' style='display:inline;'>
+                    <input type='hidden' name='id' th:value='${statistic.id}'/>
+                    Количество задач:
+                    <input type='number' name='taskCount' th:value='${statistic.taskCount}' required />
+                    Среднее время выполнения задач:
+                    <input type='number' step='0.01' name='averageTaskTime' th:value='${statistic.averageTaskTime}' required />
+                    Процент выполненных задач:
+                    <input type='number' step='0.01' name='completedTaskPercentage' th:value='${statistic.completedTaskPercentage}' required />
+
+                    <!-- Выпадающий список для выбора проекта -->
+                    Проект:
+                    <select name='project.id'>
+                        <th:block th:each='project : ${projects}'>
+                            <option th:value='${project.id}'
+                                    th:text='${project.projectName}'
+                                    th:selected='${project.id == statistic.project.id}'></option>
+                        </th:block>
+                    </select>
+
+                    <!-- Кнопка обновления -->
+                    <button type='submit' class='btn btn-warning'>Обновить</button>
+                </form>
+
+                <!-- Форма для удаления статистики -->
+                Удалить:
+                <form action='/statistics/delete' method='post' style='display:inline;'>
+                    <input type='hidden' name='id' th:value='${statistic.id}'/>
+                    <button type='submit' class='btn btn-danger'>Удалить</button>
+                </form>
+            </li>
+        </th:block>
+    </ul>
+
+</div>
+
+<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
