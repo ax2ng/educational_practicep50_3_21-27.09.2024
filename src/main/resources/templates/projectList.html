@@ -65,25 +65,23 @@
         <!-- Кнопка добавления -->
         <button type='submit' class='btn btn-primary'>Добавить проект</button>
     </form>
-
-    <!-- Список всех проектов -->
-    <h2>Все проекты:</h2>
-    <div class="row">
-        <th:block th:each='project : ${projects}'>
-            <div class='col-md-4 mb-4'>
-                <div class='card'>
-                    <div class='card-body'>
-                        <h5 class='card-title' th:text='${project.projectName}'></h5>
-                        <p class='card-text'>
-                            Описание:
-                            <span th:text='${project.projectDescription}'></span><br/>
-                            Дата начала:
-                            <span th:text='${project.startDate}'></span><br/>
-                            Дата окончания:
-                            <span th:text='${project.endDate}'></span><br/>
-                            Статус:
-                            <span th:text='${project.status.statusName}'></span>
-                        </p>
+                        <h2>Все проекты:</h2>
+                        <div class="row">
+                            <th:block th:each='project : ${projects}'>
+                                <div class='col-md-4 mb-4'>
+                                    <div class='card'>
+                                        <div class='card-body'>
+                                            <h5 class='card-title' th:text='${project.projectName}'></h5>
+                                            <p class='card-text'>
+                                                Описание:
+                                                <span th:text='${project.projectDescription}'></span><br/>
+                                                Дата начала:
+                                                <span th:text='${project.startDate}'></span><br/>
+                                                Дата окончания:
+                                                <span th:text='${project.endDate}'></span><br/>
+                                                Статус:
+                                                <span th:text='${project.status.statusName}'></span>
+                                            </p>
 
                         <!-- Форма для обновления проекта -->
                         <h5>Обновить проект:</h5>

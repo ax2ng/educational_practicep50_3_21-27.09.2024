@@ -33,7 +33,7 @@ public class Project {
     @NotNull(message = "Дата окончания не может быть пустой")
     private LocalDate endDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "status_id", nullable = false)
     @NotNull(message = "Статус не может быть пустым")
     private Status status;

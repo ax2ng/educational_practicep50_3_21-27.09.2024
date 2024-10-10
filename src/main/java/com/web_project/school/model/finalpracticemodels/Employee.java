@@ -56,17 +56,17 @@ public class Employee {
     )
     private List<Project> projects;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "employee_projects",
-//            joinColumns = @JoinColumn(name = "employee_id"),
-//            inverseJoinColumns = @JoinColumn(name = "project_id")
-//    )
-//    private List<Project> projects;
+    @ManyToMany
+    @JoinTable(
+            name = "employee_tasks",
+            joinColumns = @JoinColumn(name = "employee_id"),
+            inverseJoinColumns = @JoinColumn(name = "task_id")
+    )
+    private List<Task> tasks;
 
     public Employee() {}
 
-    public Employee(UUID id, String login, String password, String email, String firstName, String lastName, String middleName, String phoneNumber, LocalDate birthDate, String avatar, String position, List<Project> projects) {
+    public Employee(UUID id, String login, String password, String email, String firstName, String lastName, String middleName, String phoneNumber, LocalDate birthDate, String avatar, String position, List<Project> projects, List<Task> tasks) {
         this.id = id;
         this.login = login;
         this.password = password;
@@ -79,6 +79,7 @@ public class Employee {
         this.avatar = avatar;
         this.position = position;
         this.projects = projects;
+        this.tasks = tasks;
     }
 
     public UUID getId() {
@@ -175,5 +176,13 @@ public class Employee {
 
     public void setProjects(List<Project> projects) {
         this.projects = projects;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 }

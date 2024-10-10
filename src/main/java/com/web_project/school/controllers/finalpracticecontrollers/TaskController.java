@@ -92,13 +92,13 @@ public class TaskController {
 
         taskService.add(task);
 
-//        if (employeeIds != null) {
-//            for (UUID employeeId : employeeIds) {
-//                Employee employee = employeeService.findById(employeeId);
-//                employee.ge().add(task); // Добавляем продукт к студенту
-//                employeeService.update(employee); // Обновляем студента в базе данных
-//            }
-//        }
+        if (employeeIds != null) {
+            for (UUID employeeId : employeeIds) {
+                Employee employee = employeeService.findById(employeeId);
+                employee.getTasks().add(task); // Добавляем продукт к студенту
+                employeeService.update(employee); // Обновляем студента в базе данных
+            }
+        }
         return "redirect:/tasks/all";
     }
 

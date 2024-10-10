@@ -48,13 +48,10 @@ public class Task {
     @JoinColumn(name = "chat_id")
     private Chat chat;
 
-    @ManyToMany
-    @JoinTable(
-            name = "task_employees",
-            joinColumns = @JoinColumn(name = "task_id"),
-            inverseJoinColumns = @JoinColumn(name = "employee_id")
-    )
-    private List<Employee> employees;
+
+    @ManyToMany(mappedBy = "tasks", cascade = CascadeType.ALL) // Указываем, что эта связь управляется StudentModel
+    private List<Employee> employees; // Список студентов, которые имеют этот продукт
+
 
     public Task() {}
 

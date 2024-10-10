@@ -14,13 +14,13 @@
   <!-- Форма для добавления новой задачи -->
   <form action="/tasks/add" method="post" th:object="${task}" class="mb-4">
     <div class="form-group">
-      <label for="addTaskName">Название проекта</label>
+      <label for="addTaskName">Название задачи</label>
       <input type="text" id="addTaskName" name="taskName" class="form-control" th:field="*{taskName}" required>
       <div th:if="${#fields.hasErrors('taskName')}" th:errors="*{taskName}" class="text-danger"></div>
     </div>
 
     <div class="form-group">
-      <label for="addTaskDescription">Описание проекта</label>
+      <label for="addTaskDescription">Описание задачи</label>
       <textarea id="addTaskDescription" name="taskDescription" class="form-control" th:field="*{taskDescription}" required></textarea>
       <div th:if="${#fields.hasErrors('taskDescription')}" th:errors="*{taskDescription}" class="text-danger"></div>
     </div>
@@ -57,6 +57,9 @@
       <div th:if="${#fields.hasErrors('status')}" th:errors="{status}" class='text-danger'></div>
     </div>
 
+    <label for="chatType">Тип чата:</label>
+    <textarea id="chatType" name="chatType" placeholder="Введите тип чата" required></textarea>
+
     <label for="employees">Выберите студентов:</label>
     <select id="employees" name="employeeIds" multiple>
       <th:block th:each="employee : ${employees}">
@@ -68,22 +71,21 @@
     <button type='submit' class='btn btn-primary'>Добавить задачу</button>
   </form>
 
-  <h2>Все проекты:</h2>
+  <!-- Список всех проектов -->
+  <h2>Все задачи:</h2>
   <div class="row">
-    <th:block th:each='project : ${projects}'>
+    <th:block th:each='task : ${tasks}'>
       <div class='col-md-4 mb-4'>
         <div class='card'>
           <div class='card-body'>
-            <h5 class='card-title' th:text='${task.projectName}'></h5>
+            <h5 class='card-title' th:text='${task.taskName}'></h5>
             <p class='card-text'>
               Описание:
-              <span th:text='${task.projectDescription}'></span><br/>
+              <span th:text='${task.taskDescription}'></span><br/>
               Дата начала:
               <span th:text='${task.startDate}'></span><br/>
               Дата окончания:
               <span th:text='${task.endDate}'></span><br/>
-             Название проекта:
-              <span th:text='${task.project.projectName}'></span><br/>
               Статус:
               <span th:text='${task.status.statusName}'></span>
             </p>
@@ -134,25 +136,22 @@
             </th:block>
           </select>
 
+              <!-- Выпадающий список для выбора профиля -->
+              <select name="chatId" required>
+                <option value="" disabled selected>Выберите чат</option>
+                <th:block th:each="chat : ${chats}">
+                  <option th:value="${chat.id}" th:text="${chat.chatType}"></option> <!-- Отображаем биографию профиля -->
+                </th:block>
+              </select>
 
-          <fieldset class='form-group'>
-            <legend>Участники:</legend>
-            <th:block th:each='employee : ${employees}'>
-              <div class='form-check'>
-                <!-- Check if employee is already associated with the project -->
-                <input type='checkbox'
-                       id='updateEmployee-${employee.id}'
-                       name='participantIds'
-                       value='${employee.id}'
-                       class='form-check-input'
-                       th:checked="${#lists.contains(project.employees, employee)}">
-                <label class='form-check-label'
-                       for='updateEmployee-${employee.id}'>
-                  [[${employee.firstName} + ' ' + ${employee.lastName}]]
-                </label>
-              </div>
-            </th:block>
-          </fieldset>
+
+              <select id="employeesUpdate" name="employeeIds" multiple>
+                <th:block th:each="employee : ${employees}">
+                  <option th:value="${employee.id}"
+                          th:text="${employee.firstName} + ' ' + ${employee.lastName}"
+                          th:selected="${#lists.contains(task.employees, employee)}"></option> <!-- Выбор текущих студентов -->
+                </th:block>
+              </select>
 
 
 
@@ -170,6 +169,10 @@
       </li>
     </th:block>
   </ul>
+  </div>
+  </div>
+</div>
+</div>
 
   <!-- Ссылки на другие страницы -->
 </div>
