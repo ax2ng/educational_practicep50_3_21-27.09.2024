@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin")
-@PreAuthorize("hasAnyAuthority('ADMIN')")
 public class UserController {
     @Autowired
     private UserRepository userRepository;
@@ -20,6 +19,7 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER', 'MANAGER')")
     @GetMapping("/users")
     public String userView(Model model) {
         model.addAttribute("user_list", userRepository.findAll());

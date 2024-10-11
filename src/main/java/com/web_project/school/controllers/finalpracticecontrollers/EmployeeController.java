@@ -17,6 +17,7 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     @GetMapping("/all")
     public String getAllEmployees(Model model) {
         List<Employee> employees = employeeService.findAll();

@@ -3,68 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <title>Список продуктов</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body onload="setInitialBackgroundColor()">
 <div th:insert="blocks/header"></div>
-<h1>Список продуктов</h1>
 
-<!-- Форма для добавления нового продукта -->
-<form action="/products/add" method="post" th:object="${product}">
-    <input type="text" name="name" placeholder="Название продукта" th:field="*{name}" required>
-    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Название продукта не должно быть пустым.</div>
+<div class="container mt-4">
+    <h1 class="text-center">Список продуктов</h1>
 
-    <input type="number" name="price" placeholder="Цена (₽)" th:field="*{price}" required min=".01">
-    <div th:if="${#fields.hasErrors('price')}" th:errors="{price}">Цена должна быть положительной.</div>
+    <!-- Форма для добавления нового продукта -->
+    <form action="/products/add" method="post" th:object="${product}" class="mb-4">
+        <div class="form-group">
+            <input type="text" name="name" placeholder="Название продукта" th:field="*{name}" required class="form-control">
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger">Название продукта не должно быть пустым.</div>
+        </div>
 
-    <label for="students">Выберите студентов:</label>
-    <select id="students" name="studentIds" multiple>
-        <th:block th:each="student : ${students}">
-            <option th:value="${student.id}" th:text="${student.firstName} + ' ' + ${student.lastName}"></option>
+        <div class="form-group">
+            <input type="number" name="price" placeholder="Цена (₽)" th:field="*{price}" required min=".01" class="form-control">
+            <div th:if="${#fields.hasErrors('price')}" th:errors="{price}" class="text-danger">Цена должна быть положительной.</div>
+        </div>
+
+        <label for="students">Выберите студентов:</label>
+        <select id="students" name="studentIds" multiple class="form-control mb-3">
+            <th:block th:each="student : ${students}">
+                <option th:value="${student.id}" th:text="${student.firstName} + ' ' + ${student.lastName}"></option>
+            </th:block>
+        </select>
+
+        <button type="submit" class="btn btn-primary">Добавить продукт</button>
+    </form>
+
+    <h2>Все продукты:</h2>
+    <ul class="list-group">
+        <th:block th:each="product : ${products}">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>Название:</strong>
+                    <span th:text="${product.name}"></span>,
+                    <strong>Цена:</strong>
+                    <span th:text="${product.price}"></span>
+                </div>
+
+                <!-- Форма для обновления продукта -->
+                Обновить:
+                <form action="/products/update" method="post" style="display:inline;">
+                    <input type="hidden" name="id" th:value="${product.id}"/>
+                    <input type="text" name="name" th:value="${product.name}" required class="form-control d-inline-block w-50"/>
+                    <input type="number" name="price" th:value="${product.price}" required min=".01" class="form-control d-inline-block w-25"/>
+
+                    <!-- Выпадающий список для выбора студентов -->
+                    <label for="studentsUpdate">Выберите студентов:</label>
+                    <select id="studentsUpdate" name="studentIds" multiple class="form-control mb-2">
+                        <th:block th:each="student : ${students}">
+                            <option th:value="${student.id}"
+                                    th:text="${student.firstName} + ' ' + ${student.lastName}"
+                                    th:selected="${#lists.contains(product.students, student)}"></option>
+                        </th:block>
+                    </select>
+
+                    <!-- Кнопка обновления -->
+                    <button type="submit" class="btn btn-warning">Обновить</button>
+                </form>
+
+                <!-- Форма для удаления продукта -->
+                Удалить:
+                <form action="/products/delete" method="post" style="display:inline;">
+                    <input type="hidden" name="id" th:value="${product.id}"/>
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
+            </li>
         </th:block>
-    </select>
+    </ul>
+</div>
 
-    <button type="submit">Добавить продукт</button>
-</form>
-
-<h2>Все продукты:</h2>
-<ul>
-    <th:block th:each="product : ${products}">
-        <li>
-            <strong>Название:</strong>
-            <span th:text="${product.name}"></span>,
-            <strong>Цена:</strong>
-            <span th:text="${product.price}"></span>
-
-            <!-- Форма для обновления продукта -->
-            Обновить:
-            <form action="/products/update" method="post" style="display:inline;">
-                <input type="hidden" name="id" th:value="${product.id}"/>
-                <input type="text" name="name" th:value="${product.name}" required />
-                <input type="number" name="price" th:value="${product.price}" required min=".01"/>
-
-                <!-- Выпадающий список для выбора студентов -->
-                <label for="studentsUpdate">Выберите студентов:</label>
-                <select id="studentsUpdate" name="studentIds" multiple>
-                    <th:block th:each="student : ${students}">
-                        <option th:value="${student.id}"
-                                th:text="${student.firstName} + ' ' + ${student.lastName}"
-                                th:selected="${#lists.contains(product.students, student)}"></option> <!-- Выбор текущих студентов -->
-                    </th:block>
-                </select>
-
-                <!-- Кнопка обновления -->
-                <button type="submit">Обновить</button>
-            </form>
-
-            <!-- Форма для удаления продукта -->
-            Удалить:
-            <form action="/products/delete" method="post" style="display:inline;">
-                <input type="hidden" name="id" th:value="${product.id}"/>
-                <button type="submit">Удалить</button>
-            </form>
-        </li>
-    </th:block>
-</ul>
+<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
     // Set initial background color from localStorage
@@ -105,10 +119,6 @@
         document.getElementById('clickCount').textContent = count;
     }
 </script>
-
-<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 </html>

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang='en' xmlns:th='http://www.thymeleaf.org'>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset='UTF-8'>
+  <meta charset="UTF-8">
   <title>Список чатов</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
     body {
         font-family: Arial, sans-serif;
@@ -18,36 +19,46 @@
 <body onload="setInitialBackgroundColor()">
 <div th:insert="blocks/header"></div>
 
-<h1>Создание чата</h1>
+<div class="container mt-4">
+  <h1 class="text-center">Создание чата</h1>
 
-<!-- Форма для добавления нового чата -->
-<form action='/chats/add' method='post' th:object='${chat}'>
-  <label for="chatType">ChatType:</label>
-  <textarea id="chatType" name='chatType' placeholder='Введите тип чата' required></textarea>
+  <!-- Форма для добавления нового чата -->
+  <form action='/chats/add' method='post' th:object='${chat}' class="mb-4">
+    <div class="form-group">
+      <label for="chatType">ChatType:</label>
+      <textarea id="chatType" name='chatType' placeholder='Введите тип чата' required class="form-control"></textarea>
+    </div>
 
-  <!-- Кнопка для добавления чата -->
-  <button type='submit'>Добавить чат</button>
-</form>
+    <!-- Кнопка для добавления чата -->
+    <button type='submit' class="btn btn-primary">Добавить чат</button>
+  </form>
 
-<h2>Все чаты:</h2>
+  <h2>Все чаты:</h2>
 
-<ul>
-  <th:block th:each='chat : ${chats}'>
-    <li>
-      <strong>Chat ID:</strong>
-      <span th:text='${chat.id}'></span> -
-      <strong>Тип чата:</strong>
-      <span th:text='${chat.chatType}'></span>
+  <ul class="list-group">
+    <th:block th:each='chat : ${chats}'>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <strong>Chat ID:</strong>
+          <span th:text='${chat.id}'></span> -
+          <strong>Тип чата:</strong>
+          <span th:text='${chat.chatType}'></span>
+        </div>
 
-      <!-- Форма для удаления чата -->
-      Удалить:
-      <form action='/chats/delete' method='post' style='display:inline;'>
-        <input type='hidden' name='id' th:value='${chat.id}'/>
-        <button type='submit'>Удалить чат</button>
-      </form>
-    </li>
-  </th:block>
-</ul>
+        <!-- Форма для удаления чата -->
+        Удалить:
+        <form action='/chats/delete' method='post' style='display:inline;'>
+          <input type='hidden' name='id' th:value='${chat.id}'/>
+          <button type='submit' class='btn btn-danger btn-sm'>Удалить чат</button>
+        </form>
+      </li>
+    </th:block>
+  </ul>
+</div>
+
+<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
   // Set initial background color from localStorage
@@ -88,10 +99,6 @@
       document.getElementById('clickCount').textContent = count;
   }
 </script>
-
-<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 </html>

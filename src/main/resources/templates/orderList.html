@@ -2,69 +2,90 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Список заказов</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body onload="setInitialBackgroundColor()">
 <div th:insert="blocks/header"></div>
-<h1>Список заказов</h1>
+<div class="container mt-5">
+    <h1>Список заказов</h1>
 
-<!-- Форма для добавления нового заказа -->
-<form action="/orders/add" method="post" th:object="${order}">
-    <label for="studentId">Выберите студента:</label>
-    <select id="studentId" name="studentId" required>
-        <option value="" disabled selected>Выберите студента</option>
-        <th:block th:each="student : ${students}">
-            <option th:value="${student.id}" th:text="${student.firstName} + ' ' + ${student.lastName}"></option>
+    <!-- Форма для добавления нового заказа -->
+    <form action="/orders/add" method="post" th:object="${order}" class="mb-4">
+        <div class="form-group">
+            <label for="studentId">Выберите студента:</label>
+            <select id="studentId" name="studentId" class="form-control" required>
+                <option value="" disabled selected>Выберите студента</option>
+                <th:block th:each="student : ${students}">
+                    <option th:value="${student.id}" th:text="${student.firstName} + ' ' + ${student.lastName}"></option>
+                </th:block>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="orderNumber">Номер заказа:</label>
+            <input type="text" id="orderNumber" name="orderNumber" class="form-control" th:field="*{orderNumber}" required placeholder="Номер заказа">
+        </div>
+
+        <div class="form-group">
+            <label for="totalAmount">Сумма заказа:</label>
+            <input type="number" id="totalAmount" name="totalAmount" class="form-control" th:field="*{totalAmount}" required min="0" placeholder="Сумма заказа">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Добавить заказ</button>
+    </form>
+
+    <h2>Все заказы:</h2>
+    <ul class='list-group mb-4'>
+        <th:block th:each='order : ${orders}'>
+            <li class='list-group-item'>
+                <strong>Заказ №:</strong>
+                <span th:text="${order.orderNumber}"></span>,
+                <strong>Студент:</strong>
+                <span th:text="${order.student.firstName} + ' ' + ${order.student.lastName}"></span>,
+                <strong>Сумма:</strong>
+                <span th:text="${order.totalAmount}"></span>
+
+                <!-- Форма для обновления заказа -->
+                Обновить:
+                <form action="/orders/update" method='post' style='display:inline;'>
+                    <input type='hidden' name='id' th:value='${order.id}'/>
+                    <div class="form-group d-inline-block">
+                        <label for="studentUpdate">Выберите студента:</label>
+                        <select id="studentUpdate" name="studentId" class="form-control d-inline-block w-auto">
+                            <option value="" disabled selected>Выберите студента</option>
+                            <th:block th:each='student : ${students}'>
+                                <option th:value="${student.id}"
+                                        th:text="${student.firstName} + ' ' + ${student.lastName}"
+                                        th:selected="${order.student.id == student.id}"></option> <!-- Выбор текущего студента -->
+                            </th:block>
+                        </select>
+                    </div>
+
+                    Номер заказа:
+                    <input type='text' name='orderNumber' th:value="${order.orderNumber}" required class='form-control d-inline-block w-auto' />
+
+                    Сумма:
+                    <input type='number' name='totalAmount' th:value="${order.totalAmount}" required min='0' class='form-control d-inline-block w-auto'/>
+
+                    <!-- Кнопка обновления -->
+                    <button type='submit' class='btn btn-warning'>Обновить</button>
+                </form>
+
+                <!-- Форма для удаления заказа -->
+                Удалить:
+                <form action="/orders/delete" method='post' style='display:inline;'>
+                    <input type='hidden' name='id' th:value='${order.id}'/>
+                    <button type='submit' class='btn btn-danger'>Удалить</button>
+                </form>
+            </li>
         </th:block>
-    </select>
+    </ul>
 
-    <input type="text" name="orderNumber" placeholder="Номер заказа" th:field="*{orderNumber}" required>
-    <input type="number" name="totalAmount" placeholder="Сумма заказа" th:field="*{totalAmount}" required min="0">
 
-    <button type="submit">Добавить заказ</button>
-</form>
+</div>
 
-<h2>Все заказы:</h2>
-<ul>
-    <th:block th:each="order : ${orders}">
-        <li>
-            <strong>Заказ №:</strong>
-            <span th:text="${order.orderNumber}"></span>,
-            <strong>Студент:</strong>
-            <span th:text="${order.student.firstName} + ' ' + ${order.student.lastName}"></span>,
-            <strong>Сумма:</strong>
-            <span th:text="${order.totalAmount}"></span>
-
-            <!-- Форма для обновления заказа -->
-            Обновить:
-            <form action="/orders/update" method="post" style="display:inline;">
-                <input type="hidden" name="id" th:value="${order.id}"/>
-                <label for="studentUpdate">Выберите студента:</label>
-                <select id="studentUpdate" name="studentId" required>
-                    <option value="" disabled selected>Выберите студента</option>
-                    <th:block th:each="student : ${students}">
-                        <option th:value="${student.id}"
-                                th:text="${student.firstName} + ' ' + ${student.lastName}"
-                                th:selected="${order.student.id == student.id}"></option> <!-- Выбор текущего студента -->
-                    </th:block>
-                </select>
-                Номер заказа:
-                <input type="text" name="orderNumber" th:value="${order.orderNumber}" required />
-                Сумма:
-                <input type="number" name="totalAmount" th:value="${order.totalAmount}" required min="0"/>
-
-                <button type="submit">Обновить</button>
-            </form>
-
-            <!-- Форма для удаления заказа -->
-            Удалить:
-            <form action="/orders/delete" method="post" style="display:inline;">
-                <input type="hidden" name="id" th:value="${order.id}"/>
-                <button type="submit">Удалить</button>
-            </form>
-        </li>
-    </th:block>
-</ul>
 <script>
     // Set initial background color from localStorage
     function setInitialBackgroundColor() {

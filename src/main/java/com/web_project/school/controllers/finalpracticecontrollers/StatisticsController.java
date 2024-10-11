@@ -20,6 +20,7 @@ public class StatisticsController {
     @Autowired
     private ProjectService projectService; // Добавляем ProjectService
 
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/all")
     public String getAllStatistics(Model model) {
         List<Statistics> statisticsList = statisticsService.findAll();

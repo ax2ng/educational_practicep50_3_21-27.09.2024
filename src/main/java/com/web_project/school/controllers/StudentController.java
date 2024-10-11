@@ -31,6 +31,7 @@ public class StudentController {
     @Autowired
     private ProfileService profileService; // Добавляем ProfileService
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER', 'MANAGER')")
     @GetMapping("/all")
     public String getAllStudents(Model model) {
         model.addAttribute("students", studentService.findAll());

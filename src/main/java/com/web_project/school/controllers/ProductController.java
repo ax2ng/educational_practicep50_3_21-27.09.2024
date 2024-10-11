@@ -24,6 +24,7 @@ public class ProductController {
     @Autowired
     private StudentService studentService; // Добавляем StudentService
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER', 'MANAGER')")
     @GetMapping("/all")
     public String getAllProducts(Model model) {
         model.addAttribute("products", productService.findAll());

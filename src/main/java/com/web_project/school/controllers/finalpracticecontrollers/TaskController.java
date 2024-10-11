@@ -32,6 +32,7 @@ public class TaskController {
     private EmployeeService employeeService;
 
 
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/all")
     public String getAllTasks(Model model) {
         List<Task> tasks = taskService.findAll();

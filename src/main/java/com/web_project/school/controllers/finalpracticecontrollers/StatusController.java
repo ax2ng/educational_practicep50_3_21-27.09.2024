@@ -23,6 +23,7 @@ public class StatusController {
     @Autowired
     private TaskService taskService; // Добавляем TaskService
 
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/all")
     public String getAllStatuses(Model model) {
         List<Status> statuses = statusService.findAll();

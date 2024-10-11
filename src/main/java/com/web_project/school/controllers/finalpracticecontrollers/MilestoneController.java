@@ -20,6 +20,7 @@ public class MilestoneController {
     @Autowired
     private ProjectService projectService; // Добавляем ProjectService
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     @GetMapping("/all")
     public String getAllMilestones(Model model) {
         List<Milestone> milestones = milestoneService.findAll();

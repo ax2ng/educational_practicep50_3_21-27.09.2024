@@ -23,6 +23,7 @@ public class ChatMessageController {
     @Autowired
     private EmployeeService employeeService; // Добавляем EmployeeService
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     @GetMapping("/all")
     public String getAllChatMessages(Model model) {
 //        List<ChatMessage> chatMessages = chatMessageService.findAll();

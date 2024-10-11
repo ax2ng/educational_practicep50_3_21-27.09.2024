@@ -31,6 +31,7 @@ public class ChatController {
     @Autowired
     private TaskService taskService;
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     @GetMapping("/all")
     public String getAllChats(Model model) {
         model.addAttribute("chats", chatService.findAll());

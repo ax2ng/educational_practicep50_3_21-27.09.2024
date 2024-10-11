@@ -22,6 +22,7 @@ public class ChatFileController {
     @Autowired
     private ChatMessageService chatMessageService; // Добавляем ChatMessageService
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     @GetMapping("/all")
     public String getAllChatFiles(Model model) {
         List<ChatFile> chatFiles = chatFileService.findAll();

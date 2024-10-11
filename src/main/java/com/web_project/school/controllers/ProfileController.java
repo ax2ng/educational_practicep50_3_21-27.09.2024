@@ -23,6 +23,7 @@ public class ProfileController {
     @Autowired
     private StudentService studentService; // Добавляем StudentService
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER', 'MANAGER')")
     @GetMapping("/all")
     public String getAllProfiles(Model model) {
         model.addAttribute("profiles", profileService.findAll());

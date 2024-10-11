@@ -39,6 +39,7 @@ public class ProjectController {
     @Autowired
     private EmployeeService employeeService;
 
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping("/all")
     public String getAllProjects(Model model) {
         List<Project> projects = projectService.findAll();

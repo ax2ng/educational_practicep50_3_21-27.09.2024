@@ -23,6 +23,7 @@ public class OrderController {
     @Autowired
     private StudentService studentService; // Добавляем StudentService
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER', 'MANAGER')")
     @GetMapping("/all")
     public String getAllOrders(Model model) {
         model.addAttribute("orders", orderService.findAll());

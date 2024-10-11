@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang='en' xmlns:th='http://www.thymeleaf.org'>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset='UTF-8'>
+    <meta charset="UTF-8">
     <title>Список профилей студентов</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,61 +30,73 @@
 <body onload="setInitialBackgroundColor()">
 <div th:insert="blocks/header"></div>
 
-<h1>Список профилей студентов</h1>
+<div class="container mt-4">
+    <h1 class="text-center">Список профилей студентов</h1>
 
-<!-- Форма для добавления нового профиля -->
-<form action='/profiles/add' method='post' th:object='${profile}'>
-    <label for="bio">Биография:</label>
-    <textarea id="bio" name='bio' placeholder='Введите биографию' required></textarea>
+    <!-- Форма для добавления нового профиля -->
+    <form action='/profiles/add' method='post' th:object='${profile}' class="mb-4">
+        <div class="form-group">
+            <label for="bio">Биография:</label>
+            <textarea id="bio" name='bio' placeholder='Введите биографию' required class="form-control"></textarea>
+        </div>
 
-    <!-- Кнопка для добавления профиля -->
-    <button type='submit'>Добавить профиль</button>
-</form>
+        <!-- Кнопка для добавления профиля -->
+        <button type='submit' class="btn btn-primary">Добавить профиль</button>
+    </form>
 
-<h2>Все профили:</h2>
+    <h2>Все профили:</h2>
 
-<ul>
-    <th:block th:each='profile : ${profiles}'>
-        <li>
-            <strong>Профиль ID:</strong>
-            <span th:text='${profile.id}'></span> -
-            <strong>Студент:</strong>
-            <span th:text='${profile.student != null ? profile.student.firstName + " " + profile.student.lastName : "Нет студента"}'></span> -
-            <strong>Биография:</strong>
-            <span th:text='${profile.bio}'></span>
+    <ul class="list-group">
+        <th:block th:each='profile : ${profiles}'>
+            <li class="list-group-item">
+                <strong>Профиль ID:</strong>
+                <span th:text='${profile.id}'></span> -
+                <strong>Студент:</strong>
+                <span th:text='${profile.student != null ? profile.student.firstName + " " + profile.student.lastName : "Нет студента"}'></span> -
+                <strong>Биография:</strong>
+                <span th:text='${profile.bio}'></span>
 
-            <!-- Форма для обновления профиля -->
-            Обновить:
-            <form action='/profiles/update' method='post' style='display:inline;'>
-                <input type='hidden' name='id' th:value='${profile.id}'/>
-                <label for="bioUpdate">Биография:</label>
-                <textarea id="bioUpdate" name='bio' required th:text='${profile.bio}'></textarea>
+                <!-- Форма для обновления профиля -->
+                Обновить:
+                <form action='/profiles/update' method='post' style='display:inline;'>
+                    <input type='hidden' name='id' th:value='${profile.id}'/>
+                    <div class="form-group d-inline-block">
+                        <label for="bioUpdate">Биография:</label>
+                        <textarea id="bioUpdate" name='bio' required class="form-control" th:text='${profile.bio}'></textarea>
+                    </div>
 
-                <!-- Выпадающий список для выбора студента -->
-                <label for="studentUpdate">Выберите студента:</label>
-                <select id="studentUpdate" name="studentId" required>
-                    <option value="" disabled selected>Выберите студента</option>
-                    <th:block th:each="student : ${students}">
-                        <option th:value="${student.id}"
-                                th:text="${student.firstName} + ' ' + ${student.lastName}"
-                                th:selected="${profile.student != null && profile.student.id == student.id}"></option> <!-- Выбор текущего студента -->
-                    </th:block>
-                </select>
+                    <!-- Выпадающий список для выбора студента -->
+                    <div class="form-group d-inline-block">
+                        <label for="studentUpdate">Выберите студента:</label>
+                        <select id="studentUpdate" name="studentId" required class="form-control">
+                            <option value="" disabled selected>Выберите студента</option>
+                            <th:block th:each="student : ${students}">
+                                <option th:value="${student.id}"
+                                        th:text="${student.firstName} + ' ' + ${student.lastName}"
+                                        th:selected="${profile.student != null && profile.student.id == student.id}"></option>
+                            </th:block>
+                        </select>
+                    </div>
 
-                <!-- Кнопка обновления -->
-                Кнопка обновления:
-                <button type='submit'>Обновить профиль</button>
-            </form>
+                    <!-- Кнопка обновления -->
+                    Кнопка обновления:
+                    <button type='submit' class="btn btn-warning">Обновить профиль</button>
+                </form>
 
-            <!-- Форма для удаления профиля -->
-            Удалить:
-            <form action='/profiles/delete' method='post' style='display:inline;'>
-                <input type='hidden' name='id' th:value='${profile.id}'/>
-                <button type='submit'>Удалить профиль</button>
-            </form>
-        </li>
-    </th:block>
-</ul>
+                <!-- Форма для удаления профиля -->
+                Удалить:
+                <form action='/profiles/delete' method='post' style='display:inline;'>
+                    <input type='hidden' name='id' th:value='${profile.id}'/>
+                    <button type='submit' class="btn btn-danger">Удалить профиль</button>
+                </form>
+            </li>
+        </th:block>
+    </ul>
+</div>
+
+<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
     // Set initial background color from localStorage
@@ -125,8 +138,5 @@
     }
 </script>
 
-<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

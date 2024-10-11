@@ -3,55 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <title>Список студентов</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body onload="setInitialBackgroundColor()">
 <div th:insert="blocks/header"></div>
-<h1>Список студентов</h1>
-<form action="/students/add" method="post" th:object="${student}">
-    <input type="text" name="firstName" placeholder="Имя" th:field="*{firstName}" required>
-    <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">Имя не должно быть пустым</div>
 
-    <input type="text" name="lastName" placeholder="Фамилия" th:field="*{lastName}" required>
-    <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Фамилия не должна быть пустой</div>
+<div class="container mt-4">
+    <h1 class="text-center">Список студентов</h1>
 
-    <h3>Добавить профиль:</h3>
-    <label for="bio">Биография:</label>
-    <textarea id="bio" name="bio" placeholder="Введите биографию" required></textarea>
+    <!-- Форма для добавления нового студента -->
+    <form action="/students/add" method="post" th:object="${student}" class="mb-4">
+        <div class="form-group">
+            <input type="text" name="firstName" placeholder="Имя" th:field="*{firstName}" required class="form-control">
+            <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="text-danger">Имя не должно быть пустым</div>
+        </div>
 
-    <button type="submit">Добавить студента и профиль</button>
-</form>
+        <div class="form-group">
+            <input type="text" name="lastName" placeholder="Фамилия" th:field="*{lastName}" required class="form-control">
+            <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="text-danger">Фамилия не должна быть пустой</div>
+        </div>
 
-<h2>Все студенты:</h2>
-<ul>
-    <th:block th:each="student : ${students}">
-        <li>
-            <span th:text="${student.firstName} + ' ' + ${student.lastName}"></span>
+        <h3>Добавить профиль:</h3>
+        <div class="form-group">
+            <label for="bio">Биография:</label>
+            <textarea id="bio" name="bio" placeholder="Введите биографию" required class="form-control"></textarea>
+        </div>
 
-            <!-- Форма для обновления студента -->
-            <form action="/students/update" method="post" style="display:inline;">
-                <input type="hidden" name="id" th:value="${student.id}">
-                <input type="text" name="firstName" th:value="${student.firstName}" placeholder="Имя" required>
-                <input type="text" name="lastName" th:value="${student.lastName}" placeholder="Фамилия" required>
+        <button type="submit" class="btn btn-primary">Добавить студента и профиль</button>
+    </form>
 
-                <!-- Выпадающий список для выбора профиля -->
-                <select name="profileId" required>
-                    <option value="" disabled selected>Выберите профиль</option>
-                    <th:block th:each="profile : ${profiles}">
-                        <option th:value="${profile.id}" th:text="${profile.bio}"></option> <!-- Отображаем биографию профиля -->
-                    </th:block>
-                </select>
+    <h2>Все студенты:</h2>
+    <ul class="list-group">
+        <th:block th:each="student : ${students}">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span th:text="${student.firstName} + ' ' + ${student.lastName}"></span>
 
-                <button type="submit">Обновить</button>
-            </form>
+                <!-- Форма для обновления студента -->
+                <form action="/students/update" method="post" style="display:inline;">
+                    <input type="hidden" name="id" th:value="${student.id}">
+                    <input type="text" name="firstName" th:value="${student.firstName}" placeholder="Имя" required class="form-control d-inline-block w-25"/>
+                    <input type="text" name="lastName" th:value="${student.lastName}" placeholder="Фамилия" required class="form-control d-inline-block w-25"/>
 
-            <!-- Форма для удаления студента -->
-            <form action="/students/delete" method="post" style="display:inline;">
-                <input type="hidden" name="id" th:value="${student.id}">
-                <button type="submit">Удалить</button>
-            </form>
-        </li>
-    </th:block>
-</ul>
+                    <!-- Выпадающий список для выбора профиля -->
+                    <select name="profileId" required class="form-control d-inline-block w-25">
+                        <option value="" disabled selected>Выберите профиль</option>
+                        <th:block th:each="profile : ${profiles}">
+                            <option th:value="${profile.id}" th:text="${profile.bio}"></option>
+                        </th:block>
+                    </select>
+
+                    <button type="submit" class="btn btn-warning">Обновить</button>
+                </form>
+
+                <!-- Форма для удаления студента -->
+                Удалить:
+                <form action="/students/delete" method="post" style='display:inline;'>
+                    <input type='hidden' name='id' th:value='${student.id}'>
+                    <button type='submit' class='btn btn-danger'>Удалить</button>
+                </form>
+            </li>
+        </th:block>
+    </ul>
+</div>
+
+<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
     // Set initial background color from localStorage
@@ -93,8 +110,5 @@
     }
 </script>
 
-<script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="//cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="//stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
